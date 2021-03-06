@@ -46,7 +46,8 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="@+id/menu_note"
         app:layout_constraintTop_toBottomOf="@+id/menu_note"
-        app:srcCompat="@drawable/ic_mdi_star_rate" />
+        app:srcCompat="@drawable/ic_mdi_star_rate"
+        tools:ignore="VectorDrawableCompat" />
 
     <TextView
         android:id="@+id/menu_rating"

@@ -3,12 +3,21 @@ package com.example.fooddash.model;
 
 public class Menu {
     private String name;
-    private String imageUrl;
     private String rating;
     private String deliveryTime;
     private String deliveryCharges;
     private String price;
     private String note;
+
+    public Menu(String name,String price,String rating,String deliveryTime,String deliveryCharges,String note)
+    {
+        this.name = name;
+        this.price = price;
+        this.rating = rating;
+        this.deliveryTime = deliveryTime;
+        this.deliveryCharges = deliveryCharges;
+        this.note = note;
+    }
 
     public String getName() {
         return name;
@@ -18,13 +27,6 @@ public class Menu {
         this.name = name;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 
     public String getRating() {
         return rating;

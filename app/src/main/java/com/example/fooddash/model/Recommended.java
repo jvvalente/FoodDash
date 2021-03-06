@@ -2,9 +2,17 @@ package com.example.fooddash.model;
 
 public class Recommended {
 
+    public Recommended(String name,String price,String rating,String deliveryTime,String deliveryCharges,String note)
+    {
+        this.name = name;
+        this.price = price;
+        this.rating = rating;
+        this.deliveryTime = deliveryTime;
+        this.deliveryCharges = deliveryCharges;
+        this.note = note;
+    }
 
     private String name;
-    private String imageUrl;
     private String rating;
     private String deliveryTime;
     private String deliveryCharges;
@@ -17,14 +25,6 @@ public class Recommended {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getRating() {

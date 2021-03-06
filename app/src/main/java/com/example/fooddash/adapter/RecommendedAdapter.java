@@ -41,7 +41,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         holder.recommendedRating.setText(recommendedList.get(position).getRating());
         holder.recommendedCharges.setText(recommendedList.get(position).getDeliveryCharges());
         holder.recommendedDeliveryTime.setText(recommendedList.get(position).getDeliveryTime());
-        holder.recommendedPrice.setText("$ "+recommendedList.get(position).getPrice());
+        holder.recommendedPrice.setText(recommendedList.get(position).getPrice());
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +51,6 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                 i.putExtra("name", recommendedList.get(position).getName());
                 i.putExtra("price", recommendedList.get(position).getPrice());
                 i.putExtra("rating", recommendedList.get(position).getRating());
-                i.putExtra("image", recommendedList.get(position).getImageUrl());
 
                 context.startActivity(i);
             }

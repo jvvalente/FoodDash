@@ -37,7 +37,8 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="@+id/recommended_name"
         app:layout_constraintTop_toBottomOf="@+id/recommended_name"
-        app:srcCompat="@drawable/ic_mdi_star_rate" />
+        app:srcCompat="@drawable/ic_mdi_star_rate"
+        tools:ignore="VectorDrawableCompat" />
 
     <TextView
         android:id="@+id/recommended_rating"

@@ -7,7 +7,7 @@
     android:layout_marginLeft="16dp">
 
     <ImageView
-        android:id="@+id/all_menu_image"
+        android:id="@+id/popular_img"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_weight="1"
@@ -17,13 +17,31 @@
         app:srcCompat="@drawable/popular1" />
 
     <TextView
-        android:id="@+id/all_menu_name"
+        android:id="@+id/popular_name"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:text="Whatever"
         android:textColor="#333333"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@+id/all_menu_image"
-        app:layout_constraintStart_toStartOf="@+id/all_menu_image"
-        app:layout_constraintTop_toBottomOf="@+id/all_menu_image" />
+        app:layout_constraintEnd_toEndOf="@+id/popular_img"
+        app:layout_constraintStart_toStartOf="@+id/popular_img"
+        app:layout_constraintTop_toBottomOf="@+id/popular_img" />
+    <TextView
+        android:id="@+id/popular_price"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:textColor="#333333"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/popular_name"
+        app:layout_constraintStart_toStartOf="@+id/popular_name"
+        app:layout_constraintTop_toBottomOf="@+id/popular_name" />
+    <TextView
+        android:id="@+id/popular_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:textColor="#333333"
+        android:textSize="12sp"
+        android:drawableLeft="@drawable/ic_mdi_star_rate"
+        app:layout_constraintEnd_toEndOf="@+id/popular_price"
+        app:layout_constraintStart_toStartOf="@+id/popular_price"
+        app:layout_constraintTop_toBottomOf="@+id/popular_price" />
 </androidx.constraintlayout.widget.ConstraintLayout>

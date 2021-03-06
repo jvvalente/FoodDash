@@ -22,9 +22,9 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
     Context context;
     List<Menu> menuList;
 
-    public MenuAdapter(Context context, List<Menu> allmenuList) {
+    public MenuAdapter(Context context, List<Menu> menuList) {
         this.context = context;
-        this.menuList = allmenuList;
+        this.menuList = menuList;
     }
 
     @NonNull
@@ -39,7 +39,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
     public void onBindViewHolder(@NonNull AllMenuViewHolder holder, final int position) {
 
         holder.menuName.setText(menuList.get(position).getName());
-        holder.menuPrice.setText("₹ "+menuList.get(position).getPrice());
+        holder.menuPrice.setText(menuList.get(position).getPrice());
         holder.menuTime.setText(menuList.get(position).getDeliveryTime());
         holder.menuRating.setText(menuList.get(position).getRating());
         holder.menuCharges.setText(menuList.get(position).getDeliveryCharges());
@@ -53,7 +53,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
                 i.putExtra("name", menuList.get(position).getName());
                 i.putExtra("price", menuList.get(position).getPrice());
                 i.putExtra("rating", menuList.get(position).getRating());
-                i.putExtra("image", menuList.get(position).getImageUrl());
 
                 context.startActivity(i);
             }

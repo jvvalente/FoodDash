@@ -32,8 +32,6 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
     public PopularViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.popular, parent, false);
-        // here we need to create a layout for recyclerview cell items.
-
 
         return new PopularViewHolder(view);
     }
@@ -42,6 +40,9 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
     public void onBindViewHolder(@NonNull PopularViewHolder holder, final int position) {
 
         holder.popularName.setText(popularList.get(position).getName());
+        holder.popularPrice.setText(popularList.get(position).getPrice());
+        holder.popularRating.setText(popularList.get(position).getRating());
+
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +52,6 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
                 i.putExtra("name", popularList.get(position).getName());
                 i.putExtra("price", popularList.get(position).getPrice());
                 i.putExtra("rating", popularList.get(position).getRating());
-                i.putExtra("image", popularList.get(position).getImageUrl());
 
                 context.startActivity(i);
             }
@@ -67,13 +67,15 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
     public  static class PopularViewHolder extends RecyclerView.ViewHolder{
 
         ImageView popularImage;
-        TextView popularName;
+        TextView popularName,popularRating,popularPrice;
 
         public PopularViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            popularName = itemView.findViewById(R.id.menu_name);
-            popularImage = itemView.findViewById(R.id.menu_image);
+            popularName = itemView.findViewById(R.id.popular_name);
+            popularImage = itemView.findViewById(R.id.popular_img);
+            popularRating = itemView.findViewById(R.id.popular_rating);
+            popularPrice = itemView.findViewById(R.id.popular_price);
 
         }
     }
