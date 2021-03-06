@@ -30,10 +30,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        List<FoodData> foodDataList;
+        List<FoodData> foodDataList = null;
 
-
-      //  getMenu(foodDataList.get(0).getMenu());
+//        getMenu(menus);
 //        getPopularData(foodDataList.get(0).getPopular());
 //
 //        getRecommendedData(foodDataList.get(0).getRecommended());

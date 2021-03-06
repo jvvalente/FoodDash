@@ -43,8 +43,6 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
 
         holder.popularName.setText(popularList.get(position).getName());
 
-        // for image we add Glide library dependency for image fetching from server
-
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
