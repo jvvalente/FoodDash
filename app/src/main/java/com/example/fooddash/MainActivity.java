@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     PopularAdapter popularAdapter;
     RecommendedAdapter recommendedAdapter;
     MenuAdapter menuAdapter;
+    Button signUpButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +51,23 @@ public class MainActivity extends AppCompatActivity {
 //
 //        getRecommendedData(foodDataList.get(0).getRecommended());
 
+        signUpButton = (Button)findViewById(R.id.signUp);
 
+        signUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNewActivity();
+            }
+        });
 
 
     }
+
+    public void openNewActivity(){
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
     private void  getMenu(List <Menu> menuList){
 
         menuRecycleView = findViewById(R.id.menu_recycler);
