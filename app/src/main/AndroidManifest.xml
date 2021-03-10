@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodDash">
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".Home"></activity>
+        <activity android:name=".SignUpActivity" />
         <activity android:name=".FoodDetails" />
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -3,6 +3,7 @@ package com.example.fooddash;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -54,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         if(snapshot.child(user.getEmail()).exists())
-                            Toast.makeText(SignUpActivity.this, "Email already signed up!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, "Username already signed up!", Toast.LENGTH_SHORT).show();
                         else{
                             users.child(user.getEmail()).setValue(user);
                             Toast.makeText(SignUpActivity.this, "Account created!", Toast.LENGTH_SHORT).show();
@@ -79,6 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
                         User login = snapshot.child(username).getValue(User.class);
                         if(login.getPassword().equals(password)){
                             Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                            openHomeActivity();
                         }
                         else{
                             Toast.makeText(SignUpActivity.this, "Password is wrong!", Toast.LENGTH_SHORT).show();
@@ -94,6 +96,11 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void openHomeActivity(){
+        Intent intent = new Intent(this, Home.class);
+        startActivity(intent);
     }
 
 }
