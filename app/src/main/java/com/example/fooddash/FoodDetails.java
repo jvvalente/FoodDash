@@ -1,11 +1,21 @@
 package com.example.fooddash;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RatingBar;
@@ -23,8 +33,7 @@ public class FoodDetails extends AppCompatActivity {
     RatingBar ratingBar;
     ListView listView;
     static ArrayAdapter<String> adapter;
-    ArrayList<String> listItems=new ArrayList<String>();
-
+    static ArrayList<String> listItems=new ArrayList<String>();
 
     String name, price, rating, imageUrl;
 
@@ -47,12 +56,15 @@ public class FoodDetails extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         backButton = findViewById(R.id.imageView2);
 
+        listView = findViewById(R.id.userList);
+
         itemName.setText(name);
         itemPrice.setText(price);
         itemRating.setText(rating);
         ratingBar.setRating(Float.parseFloat(rating));
 
     }
+
 
     public void goBack(View v)
     {
@@ -66,15 +78,17 @@ public class FoodDetails extends AppCompatActivity {
     }
     public void addToCart(View v)
     {
-       // listView = (ListView) findViewById(R.id.list_users);
         adapter =new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         listItems.add(name + "\t\t" + price);
+        price = price.substring(1);
+        int i=Integer.parseInt(price);
+        ShoppingCart.total += i;
+        price = '$' + price;
         adapter.notifyDataSetChanged();
         Toast.makeText(FoodDetails.this, "Added to cart", Toast.LENGTH_SHORT).show();
-
-
-
-
     }
+
 }
+
+
 
