@@ -110,6 +110,11 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/price" />
 
+    <ListView
+        android:id="@+id/gallery1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/button"
         android:layout_width="0dp"
