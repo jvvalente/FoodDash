@@ -95,4 +95,8 @@ public class Home extends AppCompatActivity {
 
     }
 
+    public void shop(View v) {
+        Intent intent = new Intent(this, ShoppingCart.class);
+        startActivity(intent);    }
+
 }

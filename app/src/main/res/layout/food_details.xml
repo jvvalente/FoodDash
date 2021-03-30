@@ -16,6 +16,7 @@
         app:layout_constraintBottom_toTopOf="@+id/imageView5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:onClick="goBack"
         app:srcCompat="@drawable/ic_arrow_back_black_24dp"
         tools:ignore="VectorDrawableCompat" />
 
@@ -25,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
+        android:onClick="shoppingCart"
         android:layout_marginBottom="7dp"
         app:layout_constraintBottom_toTopOf="@+id/imageView5"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,18 +80,6 @@
         app:layout_constraintStart_toEndOf="@+id/ratingBar"
         app:layout_constraintTop_toTopOf="@+id/ratingBar" />
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="75dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ratingBar"
-        app:layout_constraintTop_toTopOf="@+id/name"
-        app:srcCompat="@drawable/ic_like"
-        tools:ignore="VectorDrawableCompat" />
 
     <TextView
         android:id="@+id/price"
@@ -113,7 +103,7 @@
         android:layout_height="107dp"
         android:layout_marginEnd="16dp"
         android:lineSpacingExtra="2dp"
-        android:text="Nasi Padang is a Padang steamed rice served with various choices of pre-cooked dishes originated from West Sumatra, Indonesia. It is known across Indonesia as Nasi Padang, after the city of Padang the capital of West Sumatra province."
+        android:text="Steak is a great meal!"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
@@ -130,6 +120,7 @@
         android:background="@drawable/add_to_cart_bg"
         android:text="Add to cart"
         android:textColor="#FFFFFF"
+        android:onClick="addToCart"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
