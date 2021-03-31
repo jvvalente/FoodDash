@@ -8,8 +8,9 @@ public class Menu {
     private String deliveryCharges;
     private String price;
     private String note;
+    private String imageUrl;
 
-    public Menu(String name,String price,String rating,String deliveryTime,String deliveryCharges,String note)
+    public Menu(String name,String price,String rating,String deliveryTime,String deliveryCharges,String note, String imageUrl)
     {
         this.name = name;
         this.price = price;
@@ -17,6 +18,7 @@ public class Menu {
         this.deliveryTime = deliveryTime;
         this.deliveryCharges = deliveryCharges;
         this.note = note;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -68,4 +70,11 @@ public class Menu {
         this.note = note;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

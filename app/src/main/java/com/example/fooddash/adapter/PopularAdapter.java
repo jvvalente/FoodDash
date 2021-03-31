@@ -2,6 +2,9 @@ package com.example.fooddash.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +18,9 @@ import com.example.fooddash.FoodDetails;
 import com.example.fooddash.R;
 import com.example.fooddash.model.Popular;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularViewHolder> {
@@ -39,11 +45,28 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
     @Override
     public void onBindViewHolder(@NonNull PopularViewHolder holder, final int position) {
 
+        try {
+            int SDK_INT = android.os.Build.VERSION.SDK_INT;
+            if (SDK_INT > 8)
+            {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                        .permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                //your codes here
+                URL newurl = new URL(popularList.get(position).getImageUrl());
+                Bitmap imagePic = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+                holder.popularImage.setImageBitmap(imagePic);
+
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         holder.popularName.setText(popularList.get(position).getName());
         holder.popularPrice.setText(popularList.get(position).getPrice());
         holder.popularRating.setText(popularList.get(position).getRating());
-
-
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +75,8 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
                 i.putExtra("name", popularList.get(position).getName());
                 i.putExtra("price", popularList.get(position).getPrice());
                 i.putExtra("rating", popularList.get(position).getRating());
+                i.putExtra("description", popularList.get(position).getNote());
+                i.putExtra("image", popularList.get(position).getImageUrl());
 
                 context.startActivity(i);
             }

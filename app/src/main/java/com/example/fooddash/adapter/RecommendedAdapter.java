@@ -2,6 +2,10 @@ package com.example.fooddash.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +19,17 @@ import com.example.fooddash.FoodDetails;
 import com.example.fooddash.R;
 import com.example.fooddash.model.Recommended;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.RecommendedViewHolder> {
 
     private Context context;
     private List<Recommended> recommendedList;
+
+    Bitmap imagePic;
 
     public RecommendedAdapter(Context context, List<Recommended> recommendedList) {
         this.context = context;
@@ -34,8 +43,41 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         return new RecommendedViewHolder(view);
     }
 
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
+
+
+        }
+    }
+
     @Override
     public void onBindViewHolder(@NonNull RecommendedViewHolder holder, final int position) {
+
+        try {
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
+            URL newurl = new URL(recommendedList.get(position).getImageUrl());
+            imagePic = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+            holder.recommendedImage.setImageBitmap(imagePic);
+
+        }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         holder.recommendedName.setText(recommendedList.get(position).getName());
         holder.recommendedRating.setText(recommendedList.get(position).getRating());
@@ -51,6 +93,8 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
                 i.putExtra("name", recommendedList.get(position).getName());
                 i.putExtra("price", recommendedList.get(position).getPrice());
                 i.putExtra("rating", recommendedList.get(position).getRating());
+                i.putExtra("description", recommendedList.get(position).getNote());
+                i.putExtra("image", recommendedList.get(position).getImageUrl());
 
                 context.startActivity(i);
             }

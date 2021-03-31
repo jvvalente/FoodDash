@@ -2,6 +2,9 @@ package com.example.fooddash.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +18,17 @@ import com.example.fooddash.FoodDetails;
 import com.example.fooddash.R;
 import com.example.fooddash.model.Menu;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHolder> {
 
     Context context;
     List<Menu> menuList;
+
+    Bitmap imagePic;
 
     public MenuAdapter(Context context, List<Menu> menuList) {
         this.context = context;
@@ -38,6 +46,25 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
     @Override
     public void onBindViewHolder(@NonNull AllMenuViewHolder holder, final int position) {
 
+        try {
+            int SDK_INT = android.os.Build.VERSION.SDK_INT;
+            if (SDK_INT > 8)
+            {
+                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                        .permitAll().build();
+                StrictMode.setThreadPolicy(policy);
+                //your codes here
+                URL newurl = new URL(menuList.get(position).getImageUrl());
+                imagePic = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
+                holder.menuImage.setImageBitmap(imagePic);
+
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         holder.menuName.setText(menuList.get(position).getName());
         holder.menuPrice.setText(menuList.get(position).getPrice());
         holder.menuTime.setText(menuList.get(position).getDeliveryTime());
@@ -53,6 +80,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
                 i.putExtra("name", menuList.get(position).getName());
                 i.putExtra("price", menuList.get(position).getPrice());
                 i.putExtra("rating", menuList.get(position).getRating());
+                i.putExtra("description", menuList.get(position).getNote());
+                i.putExtra("image", menuList.get(position).getImageUrl());
 
                 context.startActivity(i);
             }

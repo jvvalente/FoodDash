@@ -1,20 +1,30 @@
 package com.example.fooddash;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.fooddash.adapter.MenuAdapter;
 import com.example.fooddash.adapter.PopularAdapter;
 import com.example.fooddash.adapter.RecommendedAdapter;
+import com.example.fooddash.model.Food;
 import com.example.fooddash.model.Menu;
 import com.example.fooddash.model.Popular;
 import com.example.fooddash.model.Recommended;
+
+import com.example.fooddash.model.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,20 +38,27 @@ public class Home extends AppCompatActivity {
     MenuAdapter menuAdapter;
     Button signUpButton;
 
+    List<Popular> popularFood;
+    List <Recommended> recommended;
+    List <Menu> menus;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         // List<FoodData> foodDataList = null;
-        List<Popular> popularFood = new ArrayList<>();
-        popularFood.add(new Popular("Steak","$20","5","35 min","3.50","Extra Spicy"));
+        popularFood = new ArrayList<>();
+        //popularFood.add(new Popular("Steak","$20","5","35 min","3.50","Extra Spicy"));
+
+        recommended = new ArrayList<>();
+        //recommended.add(new Recommended("Steak","$20","5","35 min","3.50","Extra Spicy"));
+
+        menus = new ArrayList<>();
+        //menus.add(new Menu("Steak","$20","5","35 min","3.50","Extra Spicy"));
+        loadData();
         getPopularData(popularFood);
-        List <Recommended> recommended = new ArrayList<>();
-        recommended.add(new Recommended("Steak","$20","5","35 min","3.50","Extra Spicy"));
         getRecommendedData(recommended);
-        List <Menu> menus = new ArrayList<>();
-        menus.add(new Menu("Steak","$20","5","35 min","3.50","Extra Spicy"));
         getMenu(menus);
 
 
@@ -60,12 +77,25 @@ public class Home extends AppCompatActivity {
         });
     }
 
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
+
+        }
+    }
+
     public void openNewActivity(){
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 
-    private void  getMenu(List <Menu> menuList){
+    private void getMenu(List <Menu> menuList){
 
         menuRecycleView = findViewById(R.id.menu_recycler);
         menuAdapter = new MenuAdapter(this, menuList);
@@ -92,6 +122,34 @@ public class Home extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recommendedRecyclerView.setLayoutManager(layoutManager);
         recommendedRecyclerView.setAdapter(recommendedAdapter);
+
+    }
+
+    private void loadData(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference food = database.getReference("Food");
+
+        food.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                popularFood.clear();
+                recommended.clear();
+                menus.clear();
+
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Food item = postSnapshot.getValue(Food.class);
+                    System.out.println(item.getFoodName());
+                    popularFood.add(new Popular(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), item.getDeliveryTime(), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
+                    recommended.add(new Recommended(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), item.getDeliveryTime(), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
+                    menus.add(new Menu(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), item.getDeliveryTime(), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("The read failed: " + error.getMessage());
+            }
+        });
 
     }
 

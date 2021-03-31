@@ -2,7 +2,7 @@ package com.example.fooddash.model;
 
 public class Recommended {
 
-    public Recommended(String name,String price,String rating,String deliveryTime,String deliveryCharges,String note)
+    public Recommended(String name,String price,String rating,String deliveryTime,String deliveryCharges,String note, String imageUrl)
     {
         this.name = name;
         this.price = price;
@@ -10,6 +10,7 @@ public class Recommended {
         this.deliveryTime = deliveryTime;
         this.deliveryCharges = deliveryCharges;
         this.note = note;
+        this.imageUrl = imageUrl;
     }
 
     private String name;
@@ -18,6 +19,7 @@ public class Recommended {
     private String deliveryCharges;
     private String price;
     private String note;
+    private String imageUrl;
 
     public String getName() {
         return name;
@@ -67,5 +69,12 @@ public class Recommended {
         this.note = note;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
 
