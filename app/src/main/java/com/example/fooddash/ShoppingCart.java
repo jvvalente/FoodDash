@@ -24,7 +24,7 @@ public class ShoppingCart extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     ImageView backButton;
     TextView totalPrice;
-    static int total = 0;
+    static double total = 0.00;
 
 
 
@@ -39,7 +39,7 @@ public class ShoppingCart extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), Home.class);
+                Intent intent = new Intent(getApplicationContext(), Home.class);
                 startActivity(intent);
             }
         });
@@ -72,7 +72,7 @@ public class ShoppingCart extends AppCompatActivity {
                                 }
                                 FoodDetails.listItems.remove(i);
                                 adapter.notifyDataSetChanged();
-                                int integer=Integer.parseInt(priceString);
+                                double integer=Double.parseDouble(priceString);
                                 total -= integer;
                                 String temp = "Total: $" + total;
                                 totalPrice.setText(temp);
@@ -90,24 +90,6 @@ public class ShoppingCart extends AppCompatActivity {
         });
 
     }
-    private void createDialog()
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-        builder.setMessage("Would you like to remove this Item?")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        // do something
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
 
-        builder.show();
-
-
-    }
 
 }

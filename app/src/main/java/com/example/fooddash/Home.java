@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.example.fooddash.adapter.MenuAdapter;
 import com.example.fooddash.adapter.PopularAdapter;
@@ -37,6 +40,7 @@ public class Home extends AppCompatActivity {
     RecommendedAdapter recommendedAdapter;
     MenuAdapter menuAdapter;
     Button signUpButton;
+    EditText search;
 
     List<Popular> popularFood;
     List <Recommended> recommended;

@@ -108,9 +108,13 @@ public class FoodDetails extends AppCompatActivity {
     public void addToCart(View v)
     {
         adapter =new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
-        listItems.add(name + "\t\t" + price);
+        if(!price.contains("$"))
+        listItems.add(name + "\t\t\t\t$" + price);
+        else if(price.contains("$"))
+            listItems.add(name + "\t\t\t\t" + price);
+        if(price.contains("$"))
         price = price.substring(1);
-        int i=Integer.parseInt(price);
+        double i=Double.parseDouble(price);
         ShoppingCart.total += i;
         price = '$' + price;
         adapter.notifyDataSetChanged();
