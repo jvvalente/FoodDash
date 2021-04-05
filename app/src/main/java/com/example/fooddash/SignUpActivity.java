@@ -49,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final User user = new User(usernameText.getText().toString(),passwordText.getText().toString());
+                final User user = new User(usernameText.getText().toString(),passwordText.getText().toString(),"");
 
                 users.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
