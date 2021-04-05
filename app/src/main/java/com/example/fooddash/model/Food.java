@@ -19,14 +19,14 @@ public class Food {
     private double foodPrice;
     private double foodRating;
     private String foodType;
-    private String deliveryTime;
+    private int deliveryTime;
     private double deliveryCharges;
     private String foodNote;
     private String foodImageUrl;
 
     public Food() { }
 
-    public Food(String foodName, double foodPrice, double foodRating, String foodType, String deliveryTime, double deliveryCharges, String foodNote, String foodImageUrl) {
+    public Food(String foodName, double foodPrice, double foodRating, String foodType, int deliveryTime, double deliveryCharges, String foodNote, String foodImageUrl) {
         this.foodName = foodName;
         this.foodPrice = foodPrice;
         this.foodRating = foodRating;
@@ -69,11 +69,11 @@ public class Food {
         this.foodType = foodType;
     }
 
-    public String getDeliveryTime() {
+    public int getDeliveryTime() {
         return deliveryTime;
     }
 
-    public void setDeliveryTime(String deliveryTime) {
+    public void setDeliveryTime(int deliveryTime) {
         this.deliveryTime = deliveryTime;
     }
 
@@ -103,15 +103,17 @@ public class Food {
 
     public void loadItems(){
 
-        Food f1 = new Food("Cheeseburger",5.99, 5,"American","35 min", 3.50, "All american dish", "https://www.sbs.com.au/food/sites/sbs.com.au.food/files/styles/full/public/lotus-burger-lead.jpg?itok=HQnBHNu2&mtime=1590410336");
-        Food f2 = new Food("Cheese pizza", 8.99, 4.89, "Italian", "35 min", 3.50, "Famous italian dish", "https://images.contentstack.io/v3/assets/blt068dbc54bf4fc7ed/bltf70df0a3f7b98d04/5db5c829e9effa6ba52972ea/Triple_Cheese_Pizza_v2.jpg");
-        Food f3 = new Food("Tonkotsy ramen", 9.99, 4.95, "Asian", "35 min", 3.50, "Amazing asian dish", "https://glebekitchen.com/wp-content/uploads/2017/04/tonkotsuramenfront.jpg");
+        Food f1 = new Food("Cheeseburger",5.99, 5,"American",35, 3.50, "All american dish", "https://www.sbs.com.au/food/sites/sbs.com.au.food/files/styles/full/public/lotus-burger-lead.jpg?itok=HQnBHNu2&mtime=1590410336");
+        Food f2 = new Food("Cheese pizza", 8.99, 4.89, "Italian", 35, 3.50, "Famous italian dish", "https://images.contentstack.io/v3/assets/blt068dbc54bf4fc7ed/bltf70df0a3f7b98d04/5db5c829e9effa6ba52972ea/Triple_Cheese_Pizza_v2.jpg");
+        Food f3 = new Food("Tonkotsy ramen", 9.99, 4.95, "Asian", 35, 3.50, "Amazing asian dish", "https://glebekitchen.com/wp-content/uploads/2017/04/tonkotsuramenfront.jpg");
+        Food f4 = new Food("Buffalo wings", 9.99, 4, "American", 25, 2.99, "Best wings in town", "https://d1uz88p17r663j.cloudfront.net/resized/1a69f85aabec474eb02d4c875c0de560_iStock-835903320_744_419.jpg");
 
         List <Food>foodList = new ArrayList();
 
         foodList.add(f1);
         foodList.add(f2);
         foodList.add(f3);
+        foodList.add(f4);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference food = database.getReference("Food");
@@ -132,7 +134,5 @@ public class Food {
         }
 
     }
-
-
 
 }

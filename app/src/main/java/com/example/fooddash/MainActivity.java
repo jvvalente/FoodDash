@@ -14,9 +14,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        //Food food = new Food();
+        Food food = new Food();
 
-        //food.loadItems();
+        food.loadItems();
 
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);

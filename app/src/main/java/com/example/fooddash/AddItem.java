@@ -13,10 +13,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.res.Resources;
 
+import com.example.fooddash.model.Food;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AddItem extends AppCompatActivity {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference food = database.getReference("Food");
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -97,10 +107,14 @@ public class AddItem extends AppCompatActivity {
                     else
                     {
                         Toast.makeText(getBaseContext(), "Submitting to the DataBase", Toast.LENGTH_LONG).show();
+                        int deliverytime = Integer.parseInt(deliveryTime.getText().toString());
                         double deliverycharge = Double.parseDouble(deliveryCharges.getText().toString());
                         double foodprice = Double.parseDouble(foodPrice.getText().toString());
                         double foodrating = Double.parseDouble(foodRating.getText().toString());
 
+                        Food f = new Food(foodName.getText().toString(), foodprice, foodrating,foodType.getText().toString(), deliverytime, deliverycharge, foodNote.getText().toString(), imageUrl.getText().toString());
+
+                        food.child(f.getFoodName()).setValue(f);
 
                     }
 

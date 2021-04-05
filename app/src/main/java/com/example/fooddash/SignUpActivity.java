@@ -78,10 +78,12 @@ public class SignUpActivity extends AppCompatActivity {
                 if(snapshot.child(username).exists()){
                     if(!username.isEmpty()){
                         User login = snapshot.child(username).getValue(User.class);
+
                         if(login.getEmail().equals("admin"))
                             if(login.getPassword().equals("admin"))
                                 openAdminActivity();
-                        else if(login.getPassword().equals(password)){
+
+                        if(login.getPassword().equals(password)){
                             Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
                             openHomeActivity();
                         }
