@@ -49,7 +49,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final User user = new User(usernameText.getText().toString(),passwordText.getText().toString());
+                final User user = new User(usernameText.getText().toString(),passwordText.getText().toString(),"");
 
                 users.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -86,7 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                         else if(login.getPassword().equals(password)){
                             Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-                            openHomeActivity();
+                            openHomeActivity(username);
                         }
                         else{
                             Toast.makeText(SignUpActivity.this, "Password is wrong!", Toast.LENGTH_SHORT).show();
@@ -104,8 +104,9 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private void openHomeActivity(){
+    private void openHomeActivity(String username){
         Intent intent = new Intent(this, Home.class);
+        intent.putExtra("currentUser",username);
         startActivity(intent);
     }
     private void openAdminActivity(){
