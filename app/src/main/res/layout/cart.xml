@@ -16,7 +16,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_arrow_back_black_24dp"
-        tools:ignore="VectorDrawableCompat" />
+        tools:ignore="VectorDrawableCompat"
+        android:layout_marginLeft="16dp" />
 
     <TextView
         android:id="@+id/tv1"
@@ -45,6 +46,17 @@
         app:layout_constraintLeft_toRightOf="@id/tv1"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Spinner
+        android:layout_width="364dp"
+        android:layout_height="551dp"
+        android:layout_marginEnd="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backButton"
+        app:layout_constraintVertical_bias="0.464"
+        android:layout_marginRight="48dp" />
     <ListView
         android:id="@+id/userList"
         android:layout_width="364dp"
@@ -55,7 +67,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backButton"
-        app:layout_constraintVertical_bias="0.464" />
+        app:layout_constraintVertical_bias="0.464"
+        android:layout_marginRight="48dp" />
 
     <Button
         android:id="@+id/confirm"

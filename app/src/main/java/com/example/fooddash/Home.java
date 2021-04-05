@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.content.DialogInterface;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,25 +53,15 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // List<FoodData> foodDataList = null;
         popularFood = new ArrayList<>();
-        //popularFood.add(new Popular("Steak","$20","5","35 min","3.50","Extra Spicy"));
 
         recommended = new ArrayList<>();
-        //recommended.add(new Recommended("Steak","$20","5","35 min","3.50","Extra Spicy"));
 
         menus = new ArrayList<>();
-        //menus.add(new Menu("Steak","$20","5","35 min","3.50","Extra Spicy"));
         loadData();
         getPopularData(popularFood);
         getRecommendedData(recommended);
         getMenu(menus);
-
-
-//        getMenu(menus);
-//        getPopularData(foodDataList.get(0).getPopular());
-//
-//        getRecommendedData(foodDataList.get(0).getRecommended());
 
         signUpButton = (Button)findViewById(R.id.signUp);
 
@@ -159,6 +151,26 @@ public class Home extends AppCompatActivity {
 
     public void shop(View v) {
         Intent intent = new Intent(this, ShoppingCart.class);
-        startActivity(intent);    }
+        startActivity(intent);
+    }
+
+    private void getAddressDialog()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
+        builder.setMessage("Would you like to remove this Item?")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.show();
+    }
+
 
 }
