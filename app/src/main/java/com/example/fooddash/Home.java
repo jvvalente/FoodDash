@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.example.fooddash.adapter.MenuAdapter;
 import com.example.fooddash.adapter.PopularAdapter;
@@ -219,8 +221,19 @@ public class Home extends AppCompatActivity {
                     }
                 });
 
+        final AlertDialog dialog = builder.create();
 
-        builder.show();
+        dialog.show();
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); //create a new one
+        layoutParams.weight = (float) 1.0;
+        layoutParams.gravity = Gravity.CENTER; //this is layout_gravity
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setLayoutParams(layoutParams);
+
+//        final Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+//        LinearLayout.LayoutParams positiveButtonLL = (LinearLayout.LayoutParams) positiveButton.getLayoutParams();
+//        positiveButtonLL.gravity = Gravity.CENTER;
+//        positiveButton.setLayoutParams(positiveButtonLL);
     }
 
 
