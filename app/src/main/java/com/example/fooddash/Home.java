@@ -11,6 +11,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -43,6 +46,9 @@ public class Home extends AppCompatActivity {
     MenuAdapter menuAdapter;
     Button signUpButton;
     EditText search;
+    User login;
+    FirebaseDatabase database;
+    DatabaseReference users;
 
     List<Popular> popularFood;
     List <Recommended> recommended;
@@ -52,25 +58,20 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        Intent i = getIntent();
+        String currUser = i.getStringExtra("currentUser");
 
         popularFood = new ArrayList<>();
 
         recommended = new ArrayList<>();
 
         menus = new ArrayList<>();
+        loadUserData(currUser);
         loadData();
         getPopularData(popularFood);
         getRecommendedData(recommended);
         getMenu(menus);
 
-        signUpButton = (Button)findViewById(R.id.signUp);
-
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openNewActivity();
-            }
-        });
     }
 
     public void onViewCreated(View view, Bundle savedInstanceState)
@@ -85,11 +86,32 @@ public class Home extends AppCompatActivity {
 
         }
     }
-
-    public void openNewActivity(){
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.editAddress:
+                getAddressDialog(login);
+                break;
+
+
+            case R.id.logout:
+                Intent intent = new Intent(this, SignUpActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+        return true;
+    }
+
 
     private void getMenu(List <Menu> menuList){
 
@@ -121,9 +143,32 @@ public class Home extends AppCompatActivity {
 
     }
 
+    private  void loadUserData(String username)
+    {
+       database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
+
+        users.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                login = snapshot.child(username).getValue(User.class);
+                if (login.getAddress().equals("") || login.getAddress() == null)
+                    getAddressDialog(login);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("The read failed: " + error.getMessage());
+
+            }
+        });
+
+    }
     private void loadData(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference food = database.getReference("Food");
+        FirebaseDatabase database2 = FirebaseDatabase.getInstance();
+        DatabaseReference food = database2.getReference("Food");
 
         food.addValueEventListener(new ValueEventListener() {
             @Override
@@ -154,20 +199,26 @@ public class Home extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void getAddressDialog()
+    private void getAddressDialog(User user)
     {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-        builder.setMessage("Would you like to remove this Item?")
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        users = database.getReference("Users");
+        LayoutInflater inflater =getLayoutInflater();
+        View view = inflater.inflate(R.layout.activity_home,null);
+        EditText addy = new EditText(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setView(addy);
+        if(user.getAddress().equals("") || user.getAddress() == null)
+            builder.setMessage("Please Add an Address");
+        else
+            builder.setMessage("Type in a new address")
+                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                    user.setAddress(addy.getText().toString());
+                    users.child(user.getEmail()).setValue(user);
 
                     }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
                 });
+
 
         builder.show();
     }
