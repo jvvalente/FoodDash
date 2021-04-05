@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodDash">
         <activity android:name=".Home"/>
+        <activity android:name=".AddItem" />
         <activity android:name=".ShoppingCart"/>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".FoodDetails" />

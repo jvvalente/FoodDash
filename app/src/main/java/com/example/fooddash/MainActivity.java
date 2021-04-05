@@ -12,13 +12,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_signup);
 
         //Food food = new Food();
 
         //food.loadItems();
 
-        Intent intent = new Intent(this, Home.class);
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
 
     }
