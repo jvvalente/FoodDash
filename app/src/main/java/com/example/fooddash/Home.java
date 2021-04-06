@@ -58,6 +58,7 @@ public class Home extends AppCompatActivity {
     User login;
     FirebaseDatabase database;
     DatabaseReference users;
+    String address;
 
     List<Popular> popularFood;
     List <Recommended> recommended;
@@ -212,8 +213,8 @@ public class Home extends AppCompatActivity {
 
     private void getAddressDialog(User user)
     {
-        /*users = database.getReference("Users");
-        LayoutInflater inflater =getLayoutInflater();
+        users = database.getReference("Users");
+        /*LayoutInflater inflater =getLayoutInflater();
         View view = inflater.inflate(R.layout.activity_home,null);
         EditText addy = new EditText(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -236,9 +237,19 @@ public class Home extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View view = this.getLayoutInflater().inflate(R.layout.address_dialog, null);
-        builder.setView(view)
-                .setPositiveButton("OK", null)
-                .setNegativeButton("Cancel", null);
+        builder.setView(view);
+        if(user.getAddress().equals("") || user.getAddress() == null)
+            builder.setMessage("Please Add an Address");
+        else
+            builder.setMessage("Type in a new address")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            user.setAddress(address);
+                            users.child(user.getEmail()).setValue(user);
+
+                        }
+                    });
+                builder.setNegativeButton("Cancel", null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -263,6 +274,8 @@ public class Home extends AppCompatActivity {
                 // TODO: Get info about the selected place.
                 Toast.makeText(getApplicationContext(), place.getName(), Toast.LENGTH_SHORT).show();
 
+
+                address = place.getAddress();
                 System.out.println("ID " + place.getId());
                 System.out.println("NAME " + place.getName());
                 System.out.println("ADDRESS " + place.getAddress());
