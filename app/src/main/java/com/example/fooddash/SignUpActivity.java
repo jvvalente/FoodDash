@@ -86,6 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                         else if(login.getPassword().equals(password)){
                             Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                            Home.startup = true;
                             openHomeActivity(username);
                         }
                         else{
@@ -110,7 +111,7 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(intent);
     }
     private void openAdminActivity(){
-        Intent intent = new Intent(this, AddItem.class);
+        Intent intent = new Intent(this, AdminPanel.class);
         startActivity(intent);
     }
 

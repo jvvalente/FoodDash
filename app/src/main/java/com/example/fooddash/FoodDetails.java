@@ -92,14 +92,18 @@ public class FoodDetails extends AppCompatActivity {
         itemDescription.setText(description);
         ratingBar.setRating(Float.parseFloat(rating));
 
+        backButton = (ImageView) findViewById(R.id.imageView2);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), Home.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 
-    public void goBack(View v)
-    {
-        Intent intent = new Intent(this, Home.class);
-        startActivity(intent);
-    }
     public void shoppingCart(View v)
     {
     Intent intent = new Intent(this,ShoppingCart.class);
