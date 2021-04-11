@@ -86,6 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                         else if(login.getPassword().equals(password)){
                             Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                            Home.startup = true;
                             openHomeActivity(username);
                         }
                         else{

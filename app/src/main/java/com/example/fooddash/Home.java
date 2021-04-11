@@ -59,6 +59,7 @@ public class Home extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference users;
     String address;
+    static Boolean startup;
 
     List<Popular> popularFood;
     List <Recommended> recommended;
@@ -78,7 +79,12 @@ public class Home extends AppCompatActivity {
         recommended = new ArrayList<>();
 
         menus = new ArrayList<>();
-        loadUserData(currUser);
+        if(startup)
+        {
+            loadUserData(currUser);
+            startup = false;
+
+        }
         loadData();
         getPopularData(popularFood);
         getRecommendedData(recommended);
