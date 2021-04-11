@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.example.fooddash.adapter.MenuAdapter;
 import com.example.fooddash.adapter.PopularAdapter;
@@ -237,8 +239,8 @@ public class Home extends AppCompatActivity {
                     }
                 });
 
+        final AlertDialog dialog = builder.create();
 
-        builder.show();*/
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -295,6 +297,7 @@ public class Home extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), status.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+
 
     }
 
