@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.LayoutInflater;
@@ -42,9 +45,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class Home extends AppCompatActivity {
 
@@ -60,6 +65,7 @@ public class Home extends AppCompatActivity {
     DatabaseReference users;
     String address;
     static Boolean startup;
+    static Double lat1,long1;
 
     List<Popular> popularFood;
     List <Recommended> recommended;
@@ -287,6 +293,18 @@ public class Home extends AppCompatActivity {
                 System.out.println("ADDRESS " + place.getAddress());
                 System.out.println("LAT " + place.getLatLng().latitude);
                 System.out.println("LON " + place.getLatLng().longitude);
+                lat1 = place.getLatLng().latitude;
+                long1 = place.getLatLng().longitude;
+//                Location location1 = new Location("");
+//                location1.setLatitude(lat1);
+//                location1.setLongitude(long1);
+//
+//                Location location2 = new Location("");
+//                location2.setLatitude(30.4466781);
+//                location2.setLongitude(-84.3077076);
+
+                double distanceInMiles = calculateDistance(long1,lat1,-84.3077076,30.4466781);
+
             }
 
             @Override
@@ -298,5 +316,36 @@ public class Home extends AppCompatActivity {
 
     }
 
+    public static double calculateDistance(double lon1,double lat1,double lon2,double lat2)
+    {
+        double longDiff = lon1 - lon2;
+
+        double distance = Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(longDiff));
+        distance = Math.acos(distance);
+
+        distance = rad2deg(distance);
+
+        distance = distance * 60 * 1.1515;
+
+
+        return distance;
+
+
+
+    }
+
+    private static double rad2deg(double dist)
+    {
+        return (dist*180.0 / Math.PI);
+    }
+
+    private static double deg2rad(double lat1)
+    {
+        return (lat1*Math.PI/180.0);
+    }
 
 }
