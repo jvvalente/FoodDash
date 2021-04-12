@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.example.fooddash.adapter.MenuAdapter;
 import com.example.fooddash.adapter.PopularAdapter;
@@ -58,6 +60,8 @@ public class Home extends AppCompatActivity {
     User login;
     FirebaseDatabase database;
     DatabaseReference users;
+    String address;
+    static Boolean startup;
 
     List<Popular> popularFood;
     List <Recommended> recommended;
@@ -77,7 +81,12 @@ public class Home extends AppCompatActivity {
         recommended = new ArrayList<>();
 
         menus = new ArrayList<>();
-        loadUserData(currUser);
+        if(startup)
+        {
+            loadUserData(currUser);
+            startup = false;
+
+        }
         loadData();
         getPopularData(popularFood);
         getRecommendedData(recommended);
@@ -212,8 +221,8 @@ public class Home extends AppCompatActivity {
 
     private void getAddressDialog(User user)
     {
-        /*users = database.getReference("Users");
-        LayoutInflater inflater =getLayoutInflater();
+        users = database.getReference("Users");
+        /*LayoutInflater inflater =getLayoutInflater();
         View view = inflater.inflate(R.layout.activity_home,null);
         EditText addy = new EditText(this);
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -230,15 +239,25 @@ public class Home extends AppCompatActivity {
                     }
                 });
 
+        final AlertDialog dialog = builder.create();
 
-        builder.show();*/
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View view = this.getLayoutInflater().inflate(R.layout.address_dialog, null);
-        builder.setView(view)
-                .setPositiveButton("OK", null)
-                .setNegativeButton("Cancel", null);
+        builder.setView(view);
+        if(user.getAddress().equals("") || user.getAddress() == null)
+            builder.setMessage("Please Add an Address");
+        else
+            builder.setMessage("Type in a new address")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            user.setAddress(address);
+                            users.child(user.getEmail()).setValue(user);
+
+                        }
+                    });
+                builder.setNegativeButton("Cancel", null);
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -263,6 +282,8 @@ public class Home extends AppCompatActivity {
                 // TODO: Get info about the selected place.
                 Toast.makeText(getApplicationContext(), place.getName(), Toast.LENGTH_SHORT).show();
 
+
+                address = place.getAddress();
                 System.out.println("ID " + place.getId());
                 System.out.println("NAME " + place.getName());
                 System.out.println("ADDRESS " + place.getAddress());
@@ -276,6 +297,7 @@ public class Home extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), status.toString(), Toast.LENGTH_SHORT).show();
             }
         });
+
 
     }
 

@@ -16,7 +16,6 @@
         app:layout_constraintBottom_toTopOf="@+id/imageView5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:onClick="goBack"
         app:srcCompat="@drawable/ic_arrow_back_black_24dp"
         tools:ignore="VectorDrawableCompat" />
 
