@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,9 +47,11 @@ public class RegisterRestaurant extends AppCompatActivity {
 
     Restaurant restaurant;
 
+    String address;
+
     Double lat, lon;
 
-    EditText restName;
+    EditText restName, restLogo;
     TimePicker restOpen, restClose;
     Button registerRest;
 
@@ -67,12 +71,13 @@ public class RegisterRestaurant extends AppCompatActivity {
 
         //Initializes items
         restName = findViewById(R.id.editTextRestName);
+        restLogo = findViewById(R.id.editTextRestLogo);
         restOpen = findViewById(R.id.datePickerOpen);
         restClose = findViewById(R.id.datePickerClose);
         registerRest = findViewById(R.id.register_button);
 
         restOpen.setIs24HourView(true);
-        restClose.setIs24HourView(false);
+        restClose.setIs24HourView(true);
 
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
@@ -84,6 +89,8 @@ public class RegisterRestaurant extends AppCompatActivity {
             public void onPlaceSelected(@NonNull Place place) {
                 // TODO: Get info about the selected place.
                 Toast.makeText(getApplicationContext(), place.getName(), Toast.LENGTH_SHORT).show();
+
+                address = place.getAddress();
 
                 lat = place.getLatLng().latitude;
                 lon = place.getLatLng().longitude;
@@ -107,9 +114,25 @@ public class RegisterRestaurant extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                //Check if empty
+                if(TextUtils.isEmpty(restName.getText().toString())) {
+                    restName.setError("Missing name");
+                    return;
+                }
+
+                if(TextUtils.isEmpty(restLogo.getText().toString())) {
+                    restLogo.setError("Missing logo");
+                    return;
+                }
+
+                //Validates URL
+                if(!Patterns.WEB_URL.matcher(restLogo.getText().toString()).matches()){
+                    restLogo.setError("Invalid URL");
+                }
+
                 String openTime = restOpen.getHour() + ":" + restOpen.getMinute();
                 String closeTime = restClose.getHour() + ":" + restClose.getMinute();
-                restaurant = new Restaurant(restName.getText().toString(), "", openTime, closeTime, lat,lon);
+                restaurant = new Restaurant(restName.getText().toString(), restLogo.getText().toString(),"", address, openTime, closeTime, lat,lon);
 
                 rest.child(restaurant.getRestaurantName()).setValue(restaurant);
             }

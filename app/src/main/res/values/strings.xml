@@ -4,6 +4,7 @@
     <string name="add_item_button">Add item</string>
 
     <string name="restaurant_name">Restaurant name</string>
+    <string name="restaurant_logo_url">Restaurant logo url</string>
     <string name="restaurant_type">Restaurant type</string>
     <string name="restaurant_open">Opening time</string>
     <string name="restaurant_close">Closing time</string>

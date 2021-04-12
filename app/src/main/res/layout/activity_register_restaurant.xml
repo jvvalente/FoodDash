@@ -23,7 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="@string/restaurant_name" />
+            android:text="@string/restaurant_name"
+            android:layout_margin="10dp"/>
 
         <EditText
             android:id="@+id/editTextRestName"
@@ -31,8 +32,25 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:layout_margin="10dp"/>
 
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/restaurant_logo_url"
+            android:layout_margin="10dp"/>
+
+        <EditText
+            android:id="@+id/editTextRestLogo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:layout_margin="10dp"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -85,19 +103,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="@string/restaurant_address" />
+            android:text="@string/restaurant_address"
+            android:layout_margin="10dp"/>
 
         <fragment
             android:id="@+id/place_autocomplete_fragment"
             android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginBottom="10dp"
+            android:layout_margin="10dp"/>
 
         <Button
             android:id="@+id/register_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/register_restuarant" />
+            android:text="@string/register_restuarant"
+            android:layout_margin="10dp"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

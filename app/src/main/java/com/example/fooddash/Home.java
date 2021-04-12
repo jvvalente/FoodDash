@@ -245,7 +245,7 @@ public class Home extends AppCompatActivity {
                     }
                 });
 
-        final AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();*/
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
