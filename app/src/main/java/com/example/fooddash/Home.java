@@ -245,6 +245,7 @@ public class Home extends AppCompatActivity {
     {
         users = database.getReference("Users");
 
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View view = this.getLayoutInflater().inflate(R.layout.address_dialog, null);

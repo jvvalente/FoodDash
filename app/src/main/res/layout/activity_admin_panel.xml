@@ -8,16 +8,77 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="413dp"
-        android:layout_height="272dp"
+        android:layout_width="418dp"
+        android:layout_height="323dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="126dp"
+                android:layout_height="128dp"
+                tools:layout_editor_absoluteX="147dp"
+                tools:layout_editor_absoluteY="16dp"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/textViewRestName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="180dp"
+                android:layout_marginLeft="180dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="179dp"
+                android:layout_marginRight="179dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+
+            <TextView
+                android:id="@+id/textViewRestAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="180dp"
+                android:layout_marginLeft="180dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="180dp"
+                android:layout_marginRight="180dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewRestName" />
+
+            <TextView
+                android:id="@+id/textViewRestHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="180dp"
+                android:layout_marginLeft="180dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="180dp"
+                android:layout_marginRight="180dp"
+                android:text="TextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textViewRestAddress" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="413dp"
-        android:layout_height="459dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="1dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

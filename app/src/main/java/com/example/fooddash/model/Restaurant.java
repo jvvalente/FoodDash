@@ -3,17 +3,21 @@ package com.example.fooddash.model;
 public class Restaurant {
 
     String restaurantName;
+    String restaurantLogoUrl;
     String restaurantType;
     String restaurantOpenTime;
     String restaurantCloseTime;
+    String restaurantAddress;
     Double restaurantLatitude;
     Double restaurantLongitude;
 
-    public Restaurant(String restaurantName, String restaurantType, String restaurantOpenTime, String restaurantCloseTime, Double restaurantLatitude, Double restaurantLongitude) {
+    public Restaurant(String restaurantName, String restaurantLogoUrl, String restaurantType, String restaurantOpenTime, String restaurantCloseTime, String restaurantAddress, Double restaurantLatitude, Double restaurantLongitude) {
         this.restaurantName = restaurantName;
+        this.restaurantLogoUrl = restaurantLogoUrl;
         this.restaurantType = restaurantType;
         this.restaurantOpenTime = restaurantOpenTime;
         this.restaurantCloseTime = restaurantCloseTime;
+        this.restaurantAddress = restaurantAddress;
         this.restaurantLatitude = restaurantLatitude;
         this.restaurantLongitude = restaurantLongitude;
     }
@@ -24,6 +28,14 @@ public class Restaurant {
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
+    }
+
+    public String getRestaurantLogoUrl() {
+        return restaurantLogoUrl;
+    }
+
+    public void setRestaurantLogoUrl(String restaurantLogoUrl) {
+        this.restaurantLogoUrl = restaurantLogoUrl;
     }
 
     public String getRestaurantType() {
@@ -48,6 +60,14 @@ public class Restaurant {
 
     public void setRestaurantCloseTime(String restaurantCloseTime) {
         this.restaurantCloseTime = restaurantCloseTime;
+    }
+
+    public String getRestaurantAddress() {
+        return restaurantAddress;
+    }
+
+    public void setRestaurantAddress(String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
     }
 
     public Double getRestaurantLatitude() {
