@@ -36,6 +36,7 @@ import com.example.fooddash.model.Menu;
 import com.example.fooddash.model.Popular;
 import com.example.fooddash.model.Recommended;
 
+import com.example.fooddash.model.Restaurant;
 import com.example.fooddash.model.User;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -83,6 +84,7 @@ public class Home extends AppCompatActivity {
     String address;
     static Boolean startup;
     static Double lat1,long1;
+    Double restLat, restLon;
 
     List<Popular> popularFood;
     List <Recommended> recommended;
@@ -263,10 +265,34 @@ public class Home extends AppCompatActivity {
                             origin.setLatitude(lat1);
                             origin.setLongitude(long1);
 
+                            //Getting restaurant coordinates
+                            FirebaseDatabase database2 = FirebaseDatabase.getInstance();
+                            DatabaseReference rest = database2.getReference("Restaurant");
+
+                            rest.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+
+                                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                                        Restaurant rest1 = postSnapshot.getValue(Restaurant.class);
+                                        System.out.println("Please work " + rest1.getRestaurantName() + " " + rest1.getRestaurantLatitude() + " " + rest1.getRestaurantLongitude());
+                                        restLat = rest1.getRestaurantLatitude();
+                                        restLon = rest1.getRestaurantLongitude();
+
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    System.out.println("The read failed: " + error.getMessage());
+                                }
+                            });
+
                             //Add restuarants coordinates here
                             Location destination = new Location("");
-                            destination.setLatitude(30.4466781);
-                            destination.setLongitude(-84.3077076);
+                            destination.setLatitude(restLat);
+                            destination.setLongitude(restLon);
 
                             String url = getDirectionsUrl(origin, destination);
 
