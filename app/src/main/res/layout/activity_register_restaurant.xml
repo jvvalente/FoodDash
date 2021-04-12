@@ -7,31 +7,97 @@
     tools:context=".RegisterRestaurant">
 
     <LinearLayout
-        android:layout_width="411dp"
-        android:layout_height="687dp"
-        android:layout_marginTop="44dp"
+        android:layout_width="416dp"
+        android:layout_height="597dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="-30dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintVertical_bias="0.045">
 
         <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:layout_marginBottom="10dp"
+            android:text="@string/restaurant_name" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/editTextRestName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            android:inputType="textPersonName" />
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="205dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/restaurant_open" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="205dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/restaurant_close" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TimePicker
+                android:id="@+id/datePickerOpen"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:timePickerMode="spinner" />
+
+            <TimePicker
+                android:id="@+id/datePickerClose"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:timePickerMode="spinner" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/restAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="@string/restaurant_address" />
 
         <fragment
             android:id="@+id/place_autocomplete_fragment"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment" />
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/register_restuarant" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
