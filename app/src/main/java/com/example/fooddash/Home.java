@@ -86,6 +86,9 @@ public class Home extends AppCompatActivity {
     static Double lat1,long1;
     Double restLat, restLon;
 
+    String distance;
+    String duration;
+
     List<Popular> popularFood;
     List <Recommended> recommended;
     List <Menu> menus;
@@ -111,6 +114,7 @@ public class Home extends AppCompatActivity {
 
         }
         loadData();
+        loadRestaurantData();
         getPopularData(popularFood);
         getRecommendedData(recommended);
         getMenu(menus);
@@ -186,7 +190,32 @@ public class Home extends AppCompatActivity {
         recommendedRecyclerView.setAdapter(recommendedAdapter);
 
     }
+    private void loadRestaurantData()
+    {
+        //Getting restaurant coordinates
+        FirebaseDatabase database2 = FirebaseDatabase.getInstance();
+        DatabaseReference rest = database2.getReference("Restaurant");
 
+        rest.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Restaurant rest1 = postSnapshot.getValue(Restaurant.class);
+                    System.out.println(rest1.getRestaurantLatitude());
+                    restLat = rest1.getRestaurantLatitude();
+                    restLon = rest1.getRestaurantLongitude();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("The read failed: " + error.getMessage());
+            }
+        });
+
+    }
     private  void loadUserData(String username)
     {
        database = FirebaseDatabase.getInstance();
@@ -264,30 +293,6 @@ public class Home extends AppCompatActivity {
                             Location origin = new Location("");
                             origin.setLatitude(lat1);
                             origin.setLongitude(long1);
-
-                            //Getting restaurant coordinates
-                            FirebaseDatabase database2 = FirebaseDatabase.getInstance();
-                            DatabaseReference rest = database2.getReference("Restaurant");
-
-                            rest.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
-                                    for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                                        Restaurant rest1 = postSnapshot.getValue(Restaurant.class);
-                                        System.out.println("Please work " + rest1.getRestaurantName() + " " + rest1.getRestaurantLatitude() + " " + rest1.getRestaurantLongitude());
-                                        restLat = rest1.getRestaurantLatitude();
-                                        restLon = rest1.getRestaurantLongitude();
-
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    System.out.println("The read failed: " + error.getMessage());
-                                }
-                            });
 
                             //Add restuarants coordinates here
                             Location destination = new Location("");
@@ -418,6 +423,7 @@ public class Home extends AppCompatActivity {
         return data;
     }
 
+
     // Fetches data from url passed
     private class DownloadTask extends AsyncTask<String, Void, String>{
 
@@ -475,8 +481,6 @@ public class Home extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 
-            String distance = "";
-            String duration = "";
 
             distance = DirectionsJSONParser.distance;
             duration = DirectionsJSONParser.duration;
