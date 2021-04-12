@@ -2,7 +2,6 @@
     <string name="app_name">FoodDash</string>
     <string name="register_restuarant">Register Restaurant</string>
     <string name="add_item_button">Add item</string>
-
     <string name="api_key">AIzaSyD5HzRLmQUQ6zAgoewD97l6QTuakyAjHEs</string>
 
 </resources>

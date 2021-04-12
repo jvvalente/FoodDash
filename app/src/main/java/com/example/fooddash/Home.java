@@ -242,25 +242,6 @@ public class Home extends AppCompatActivity {
     private void getAddressDialog(User user)
     {
         users = database.getReference("Users");
-        /*LayoutInflater inflater =getLayoutInflater();
-        View view = inflater.inflate(R.layout.activity_home,null);
-        EditText addy = new EditText(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setView(addy);
-        if(user.getAddress().equals("") || user.getAddress() == null)
-            builder.setMessage("Please Add an Address");
-        else
-            builder.setMessage("Type in a new address")
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    user.setAddress(addy.getText().toString());
-                    users.child(user.getEmail()).setValue(user);
-
-                    }
-                });
-
-
-        builder.show();*/
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -274,6 +255,22 @@ public class Home extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int id) {
                             user.setAddress(address);
                             users.child(user.getEmail()).setValue(user);
+
+                            Location origin = new Location("");
+                            origin.setLatitude(lat1);
+                            origin.setLongitude(long1);
+
+                            //Add restuarants coordinates here
+                            Location destination = new Location("");
+                            destination.setLatitude(30.4466781);
+                            destination.setLongitude(-84.3077076);
+
+                            String url = getDirectionsUrl(origin, destination);
+
+                            DownloadTask downloadTask = new DownloadTask();
+
+                            // Start downloading json data from Google Directions API
+                            downloadTask.execute(url);
 
                         }
                     });
@@ -313,23 +310,6 @@ public class Home extends AppCompatActivity {
                 System.out.println("LON " + place.getLatLng().longitude);
                 lat1 = place.getLatLng().latitude;
                 long1 = place.getLatLng().longitude;
-
-                Location origin = new Location("");
-                origin.setLatitude(lat1);
-                origin.setLongitude(long1);
-
-                Location destination = new Location("");
-                destination.setLatitude(30.4466781);
-                destination.setLongitude(-84.3077076);
-
-                String url = getDirectionsUrl(origin, destination);
-
-                DownloadTask downloadTask = new DownloadTask();
-
-                // Start downloading json data from Google Directions API
-                downloadTask.execute(url);
-
-                double distanceInMiles = calculateDistance(long1,lat1,-84.3077076,30.4466781);
             }
 
             @Override
@@ -341,35 +321,7 @@ public class Home extends AppCompatActivity {
 
     }
 
-    public static double calculateDistance(double lon1,double lat1,double lon2,double lat2)
-    {
-        double longDiff = lon1 - lon2;
 
-        double distance = Math.sin(deg2rad(lat1))
-                * Math.sin(deg2rad(lat2))
-                + Math.cos(deg2rad(lat1))
-                * Math.cos(deg2rad(lat2))
-                * Math.cos(deg2rad(longDiff));
-        distance = Math.acos(distance);
-
-        distance = rad2deg(distance);
-
-        distance = distance * 60 * 1.1515;
-
-
-        return distance;
-
-    }
-
-    private static double rad2deg(double dist)
-    {
-        return (dist*180.0 / Math.PI);
-    }
-
-    private static double deg2rad(double lat1)
-    {
-        return (lat1*Math.PI/180.0);
-    }
 
     private String getDirectionsUrl(Location origin, Location dest){
 
@@ -476,7 +428,6 @@ public class Home extends AppCompatActivity {
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
 
             JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
 
             try{
                 jObject = new JSONObject(jsonData[0]);
@@ -487,57 +438,21 @@ public class Home extends AppCompatActivity {
             }catch(Exception e){
                 e.printStackTrace();
             }
-            return routes;
+            return null;
         }
 
         // Executes in UI thread, after the parsing process
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList<LatLng> points = null;
-            PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
+
             String distance = "";
             String duration = "";
 
-            if(result.size()<1){
-                Toast.makeText(getBaseContext(), "No Points", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            distance = DirectionsJSONParser.distance;
+            duration = DirectionsJSONParser.duration;
 
-            // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
+            Toast.makeText(getBaseContext(),distance + "  " + duration , Toast.LENGTH_SHORT).show();
 
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
-
-                // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
-                    HashMap<String,String> point = path.get(j);
-
-                    if(j==0){    // Get distance from the list
-                        distance = (String)point.get("distance");
-                        continue;
-                    }else if(j==1){ // Get duration from the list
-                        duration = (String)point.get("duration");
-                        continue;
-                    }
-
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-
-                    points.add(position);
-                }
-
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(2);
-                lineOptions.color(Color.RED);
-            }
-
-            System.out.println("Distance:"+distance + ", Duration:"+duration);
 
         }
     }
