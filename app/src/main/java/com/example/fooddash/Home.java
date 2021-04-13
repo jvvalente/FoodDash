@@ -81,13 +81,12 @@ public class Home extends AppCompatActivity {
     User login;
     FirebaseDatabase database;
     DatabaseReference users;
-    String address;
+    static String address;
     static Boolean startup;
     static Double lat1,long1;
-    Double restLat, restLon;
+    static Double restLat, restLon;
 
-    String distance;
-    String duration;
+
 
     List<Popular> popularFood;
     List <Recommended> recommended;
@@ -225,6 +224,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 login = snapshot.child(username).getValue(User.class);
+                address = login.getAddress();
                 if (login.getAddress().equals("") || login.getAddress() == null)
                     getAddressDialog(login);
 
@@ -290,21 +290,6 @@ public class Home extends AppCompatActivity {
                             user.setAddress(address);
                             users.child(user.getEmail()).setValue(user);
 
-                            Location origin = new Location("");
-                            origin.setLatitude(lat1);
-                            origin.setLongitude(long1);
-
-                            //Add restuarants coordinates here
-                            Location destination = new Location("");
-                            destination.setLatitude(restLat);
-                            destination.setLongitude(restLon);
-
-                            String url = getDirectionsUrl(origin, destination);
-
-                            DownloadTask downloadTask = new DownloadTask();
-
-                            // Start downloading json data from Google Directions API
-                            downloadTask.execute(url);
 
                         }
                     });
@@ -356,138 +341,4 @@ public class Home extends AppCompatActivity {
 
     }
 
-
-
-    private String getDirectionsUrl(Location origin, Location dest){
-
-        // Origin of route
-        String str_origin = "origin="+origin.getLatitude()+","+origin.getLongitude();
-
-        // Destination of route
-        String str_dest = "destination="+dest.getLatitude()+","+dest.getLongitude();
-
-        // Sensor enabled
-        String sensor = "sensor=false";
-
-        String mode = "mode=driving";
-
-        String key = "key="+getResources().getString(R.string.api_key);
-
-        // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor + "&" + mode + "&" + key;
-
-        // Output format
-        String output = "json";
-
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
-
-        return url;
-    }
-    /** A method to download json data from url */
-    private String downloadUrl(String strUrl) throws IOException{
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try{
-            URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
-            urlConnection.connect();
-
-            // Reading data from url
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb  = new StringBuffer();
-
-            String line = "";
-            while( ( line = br.readLine())  != null){
-                sb.append(line);
-            }
-
-            data = sb.toString();
-
-            br.close();
-
-        }catch(Exception e){
-            Log.d("Exception while ", e.toString());
-        }finally{
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
-    }
-
-
-    // Fetches data from url passed
-    private class DownloadTask extends AsyncTask<String, Void, String>{
-
-        // Downloading data in non-ui thread
-        @Override
-        protected String doInBackground(String... url) {
-
-            // For storing data from web service
-            String data = "";
-
-            try{
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
-            }
-            return data;
-        }
-
-        // Executes in UI thread, after the execution of
-        // doInBackground()
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-        }
-    }
-
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> > {
-
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
-
-            JSONObject jObject;
-
-            try{
-                jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
-
-                // Starts parsing data
-                parser.parse(jObject);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-
-
-            distance = DirectionsJSONParser.distance;
-            duration = DirectionsJSONParser.duration;
-
-            Toast.makeText(getBaseContext(),distance + "  " + duration , Toast.LENGTH_SHORT).show();
-
-
-        }
-    }
 }

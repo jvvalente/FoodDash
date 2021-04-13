@@ -125,6 +125,7 @@ public class FoodDetails extends AppCompatActivity {
         Toast.makeText(FoodDetails.this, "Added to cart", Toast.LENGTH_SHORT).show();
     }
 
+
 }
 
 
