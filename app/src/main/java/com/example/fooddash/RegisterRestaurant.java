@@ -134,7 +134,7 @@ public class RegisterRestaurant extends AppCompatActivity {
                 String closeTime = restClose.getHour() + ":" + restClose.getMinute();
                 restaurant = new Restaurant(restName.getText().toString(), restLogo.getText().toString(),"", address, openTime, closeTime, lat,lon);
 
-                rest.child(restaurant.getRestaurantName()).setValue(restaurant);
+                rest.child("Active").setValue(restaurant);
             }
         });
 

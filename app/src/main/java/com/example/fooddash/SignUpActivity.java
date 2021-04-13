@@ -107,7 +107,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void openHomeActivity(String username){
         Intent intent = new Intent(this, Home.class);
-        intent.putExtra("currentUser",username);
+        Home.currentUser = username;
         startActivity(intent);
     }
     private void openAdminActivity(){

@@ -22,7 +22,7 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="6dp"
             android:text="@string/restaurant_name"
             android:layout_margin="10dp"/>
 
@@ -30,7 +30,7 @@
             android:id="@+id/editTextRestName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="6dp"
             android:ems="10"
             android:inputType="textPersonName"
             android:layout_margin="10dp"/>
@@ -39,7 +39,7 @@
             android:id="@+id/textView7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="6dp"
             android:text="@string/restaurant_logo_url"
             android:layout_margin="10dp"/>
 
@@ -47,10 +47,10 @@
             android:id="@+id/editTextRestLogo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="6dp"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:layout_margin="10dp"/>
+            android:inputType="textPersonName" />
 
         <LinearLayout
             android:layout_width="wrap_content"
