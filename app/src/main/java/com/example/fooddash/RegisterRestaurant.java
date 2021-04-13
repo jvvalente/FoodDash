@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -135,8 +136,15 @@ public class RegisterRestaurant extends AppCompatActivity {
                 restaurant = new Restaurant(restName.getText().toString(), restLogo.getText().toString(),"", address, openTime, closeTime, lat,lon);
 
                 rest.child("Active").setValue(restaurant);
+
+                returnAdminPanel();
             }
         });
 
+    }
+
+    private void returnAdminPanel(){
+        Intent intent = new Intent(this, AdminPanel.class);
+        startActivity(intent);
     }
 }
