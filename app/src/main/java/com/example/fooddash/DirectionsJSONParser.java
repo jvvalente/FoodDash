@@ -14,10 +14,8 @@ public class DirectionsJSONParser {
 
     static String duration;
     static String distance;
-    static boolean flag = false;
     /** Receives a JSONObject and returns a list of lists containing latitude and longitude */
     public void parse(JSONObject jObject){
-        flag = true;
         JSONArray jRoutes = null;
         JSONArray jLegs = null;
         JSONObject jDistance = null;
@@ -45,8 +43,6 @@ public class DirectionsJSONParser {
             e.printStackTrace();
         }catch (Exception e){
         }
-
-        flag = false;
 
     }
 

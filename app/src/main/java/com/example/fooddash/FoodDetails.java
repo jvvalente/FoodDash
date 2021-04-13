@@ -96,7 +96,8 @@ public class FoodDetails extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), Home.class);
+                Intent intent = new Intent(getApplicationContext(), Home.class);
+                intent.setAction("false");
                 startActivity(intent);
             }
         });
