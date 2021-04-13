@@ -81,9 +81,7 @@ public class Home extends AppCompatActivity {
     Button signUpButton;
     EditText search;
     User login;
-    FirebaseDatabase database;
-    DatabaseReference users;
-    static String address;
+    static String address = "";
     static Boolean startup;
     static Double lat1,long1;
     static Double restLat, restLon;
@@ -207,8 +205,8 @@ public class Home extends AppCompatActivity {
 
     private  void loadUserData(String username)
     {
-       database = FirebaseDatabase.getInstance();
-        users = database.getReference("Users");
+       FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference users = database.getReference("Users");
 
         users.addValueEventListener(new ValueEventListener() {
             @Override
@@ -324,22 +322,63 @@ public class Home extends AppCompatActivity {
 
     private void getAddressDialog(User user)
     {
-        users = database.getReference("Users");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference users1 = database.getReference("Users");
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View view = this.getLayoutInflater().inflate(R.layout.address_dialog, null);
         builder.setView(view);
-        if(user.getAddress().equals("") || user.getAddress() == null)
+        if(address.equals(""))
             builder.setMessage("Please Add an Address");
         else
             builder.setMessage("Type in a new address")
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            user.setAddress(address);
-                            users.child(user.getEmail()).setValue(user);
+                            if(user != null)
+                            {
+                                user.setAddress(address);
+                                users1.child(user.getEmail()).setValue(user);
 
+                            }
+                            else
+                            {
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference users = database.getReference("Users");
+
+                                users.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        login = snapshot.child(currentUser).getValue(User.class);
+                                        login.setAddress(address);
+                                        users1.child(login.getEmail()).setValue(login);
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        System.out.println("The read failed: " + error.getMessage());
+
+                                    }
+                                });
+                            }
+
+                            Location origin = new Location("");
+                            origin.setLatitude(lat1);
+                            origin.setLongitude(long1);
+
+                            //Add restuarants coordinates here
+                            Location destination = new Location("");
+                            destination.setLatitude(restLat);
+                            destination.setLongitude(restLon);
+
+                            String url = getDirectionsUrl(origin, destination);
+
+                            DownloadTask downloadTask = new DownloadTask();
+
+                            // Start downloading json data from Google Directions API
+                            downloadTask.execute(url);
 
                         }
                     });
