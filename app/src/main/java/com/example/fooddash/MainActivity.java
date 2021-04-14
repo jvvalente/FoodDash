@@ -24,27 +24,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        FirebaseDatabase database2 = FirebaseDatabase.getInstance();
-        DatabaseReference rest = database2.getReference("Restaurant");
-
-        rest.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-
-                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
-                    Restaurant rest1 = postSnapshot.getValue(Restaurant.class);
-                    System.out.println("Please work " + rest1.getRestaurantName() + " " + rest1.getRestaurantLatitude() + " " + rest1.getRestaurantLongitude());
-
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                System.out.println("The read failed: " + error.getMessage());
-            }
-        });
 
         Food food = new Food();
 

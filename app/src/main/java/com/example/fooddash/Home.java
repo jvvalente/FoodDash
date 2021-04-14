@@ -215,6 +215,8 @@ public class Home extends AppCompatActivity {
                 address = login.getAddress();
                 if (login.getAddress().equals("") || login.getAddress() == null)
                     getAddressDialog(login);
+
+                if(restLat != null && restLon != null)
                 locationData();
 
             }
@@ -333,8 +335,11 @@ public class Home extends AppCompatActivity {
         if(address.equals(""))
             builder.setMessage("Please Add an Address");
         else
-            builder.setMessage("Type in a new address")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        {
+            builder.setMessage("Type in a new address");
+
+        }
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if(user != null)
                             {
