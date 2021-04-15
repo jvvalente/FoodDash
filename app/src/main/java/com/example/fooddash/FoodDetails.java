@@ -67,7 +67,7 @@ public class FoodDetails extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         backButton = findViewById(R.id.imageView2);
 
-
+        //used to open and set images
         try {
             int SDK_INT = android.os.Build.VERSION.SDK_INT;
             if (SDK_INT > 8)
@@ -75,7 +75,7 @@ public class FoodDetails extends AppCompatActivity {
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                         .permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-                //your codes here
+                //opens URL and sets bitmap
                 URL newurl = new URL(imageURL);
                 Bitmap imagePic = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
                 imageView.setImageBitmap(imagePic);
@@ -86,6 +86,7 @@ public class FoodDetails extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        //Sets data
         itemName.setText(name);
         itemPrice.setText(price);
         itemRating.setText(rating);

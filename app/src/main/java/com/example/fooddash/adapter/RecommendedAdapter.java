@@ -43,23 +43,10 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
         return new RecommendedViewHolder(view);
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            //your codes here
-
-
-        }
-    }
-
     @Override
     public void onBindViewHolder(@NonNull RecommendedViewHolder holder, final int position) {
 
+        //Used to open and set image
         try {
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
         if (SDK_INT > 8)
@@ -79,6 +66,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             e.printStackTrace();
         }
 
+        //Sets data to correct binding
         holder.recommendedName.setText(recommendedList.get(position).getName());
         holder.recommendedRating.setText(recommendedList.get(position).getRating());
         holder.recommendedCharges.setText(recommendedList.get(position).getDeliveryCharges());
@@ -90,6 +78,7 @@ public class RecommendedAdapter extends RecyclerView.Adapter<RecommendedAdapter.
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, FoodDetails.class);
+                //Sends correct data back
                 i.putExtra("name", recommendedList.get(position).getName());
                 i.putExtra("price", recommendedList.get(position).getPrice());
                 i.putExtra("rating", recommendedList.get(position).getRating());

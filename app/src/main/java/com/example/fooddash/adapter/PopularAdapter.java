@@ -45,6 +45,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
     @Override
     public void onBindViewHolder(@NonNull PopularViewHolder holder, final int position) {
 
+        //Used to open and set image
         try {
             int SDK_INT = android.os.Build.VERSION.SDK_INT;
             if (SDK_INT > 8)
@@ -52,7 +53,7 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                         .permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-                //your codes here
+                //Gets URL and sets bitmap
                 URL newurl = new URL(popularList.get(position).getImageUrl());
                 Bitmap imagePic = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
                 holder.popularImage.setImageBitmap(imagePic);
@@ -64,10 +65,12 @@ public class PopularAdapter extends RecyclerView.Adapter<PopularAdapter.PopularV
             e.printStackTrace();
         }
 
+        //Sets info on the correct data bindings
         holder.popularName.setText(popularList.get(position).getName());
         holder.popularPrice.setText(popularList.get(position).getPrice());
         holder.popularRating.setText(popularList.get(position).getRating());
 
+        //Sends back the correct data
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

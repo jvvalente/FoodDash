@@ -46,6 +46,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
     @Override
     public void onBindViewHolder(@NonNull AllMenuViewHolder holder, final int position) {
 
+        //Used to open and set image
         try {
             int SDK_INT = android.os.Build.VERSION.SDK_INT;
             if (SDK_INT > 8)
@@ -53,7 +54,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
                 StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                         .permitAll().build();
                 StrictMode.setThreadPolicy(policy);
-                //your codes here
+                //opens URL and sets bitmap
                 URL newurl = new URL(menuList.get(position).getImageUrl());
                 imagePic = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
                 holder.menuImage.setImageBitmap(imagePic);
@@ -65,6 +66,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
             e.printStackTrace();
         }
 
+        //Sets correct data to correct binding
         holder.menuName.setText(menuList.get(position).getName());
         holder.menuPrice.setText(menuList.get(position).getPrice());
         holder.menuTime.setText(menuList.get(position).getDeliveryTime());
@@ -76,6 +78,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.AllMenuViewHol
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Sends correct data back
                 Intent i = new Intent(context, FoodDetails.class);
                 i.putExtra("name", menuList.get(position).getName());
                 i.putExtra("price", menuList.get(position).getPrice());

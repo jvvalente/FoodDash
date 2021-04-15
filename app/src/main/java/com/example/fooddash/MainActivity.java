@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        //loads all diffrent food items
+        //loads all different food items
 
         Food food = new Food();
 

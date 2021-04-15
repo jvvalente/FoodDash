@@ -57,6 +57,7 @@ public class SignUpActivity extends AppCompatActivity {
                 users.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //These will make sure user does not exist before creating it
                         if(snapshot.child(user.getEmail()).exists())
                             Toast.makeText(SignUpActivity.this, "Username already signed up!", Toast.LENGTH_SHORT).show();
                         else{
@@ -88,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
                         {
                             if(login.getPassword().equals("admin"))
                                 openAdminActivity();
-                        }
+                        }//Checks if user exists
                         else if(login.getPassword().equals(password)){
                             Home.startup = true;
                             openHomeActivity(username);
@@ -109,6 +110,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    //Functions to open new pages
     private void openHomeActivity(String username){
         Intent intent = new Intent(this, Home.class);
         Home.currentUser = username;

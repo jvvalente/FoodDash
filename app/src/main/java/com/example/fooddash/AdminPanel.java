@@ -52,9 +52,10 @@ public class AdminPanel extends AppCompatActivity {
         addItemButton = findViewById(R.id.addItemButton);
         returnButton = findViewById(R.id.returnButton);
 
+        //loads restaurant profile
         loadInfo();
 
-
+        //On click listeners for buttons
         registerRestaurantButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +80,7 @@ public class AdminPanel extends AppCompatActivity {
 
     private void loadInfo(){
 
+        //Gets restaurant table
         FirebaseDatabase database2 = FirebaseDatabase.getInstance();
         DatabaseReference rest = database2.getReference("Restaurant");
 
@@ -88,36 +90,36 @@ public class AdminPanel extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    //Gets restaurant object
                     rest1 = postSnapshot.getValue(Restaurant.class);
 
-                    System.out.println("Please work " + rest1.getRestaurantName() + " " + rest1.getRestaurantAddress() + " " + rest1.getRestaurantOpenTime() + " " + rest1.getRestaurantCloseTime());
-
+                    //Sets profile info
                     restName.setText(rest1.getRestaurantName());
                     restAddress.setText(rest1.getRestaurantOpenTime());
                     restHours.setText(rest1.getRestaurantCloseTime() + " - " + rest1.getRestaurantAddress());
 
+                    //Hides button
                     if(!restName.getText().toString().equals(" REGISTER")) {
                         registerRestaurantButton.setVisibility(View.INVISIBLE);
                     }
 
+                    //Try catch used to open and set profile picture
                     try {
                         int SDK_INT = android.os.Build.VERSION.SDK_INT;
                         if (SDK_INT > 8)
                         {
-                            System.out.println("Does it get here?");
                             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                                     .permitAll().build();
                             StrictMode.setThreadPolicy(policy);
-                            //your codes here
+
+                            //Opens url and sets bitmap
                             URL newurl = new URL(rest1.getRestaurantLogoUrl());
                             Bitmap imagePic = BitmapFactory.decodeStream(newurl.openConnection().getInputStream());
                             restPic.setImageBitmap(imagePic);
                         }
                     } catch (MalformedURLException e) {
-                        System.out.println("Theres an error here 1");
                         e.printStackTrace();
                     } catch (IOException e) {
-                        System.out.println("Theres an error here 2");
                         e.printStackTrace();
                     }
                 }
@@ -133,6 +135,7 @@ public class AdminPanel extends AppCompatActivity {
 
     }
 
+    //Function to open other pages
     private void openRegisterRestaurant(){
         Intent intent = new Intent(this, RegisterRestaurant.class);
         startActivity(intent);

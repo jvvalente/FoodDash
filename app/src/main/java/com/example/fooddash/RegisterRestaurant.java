@@ -88,28 +88,22 @@ public class RegisterRestaurant extends AppCompatActivity {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                // TODO: Get info about the selected place.
-                Toast.makeText(getApplicationContext(), place.getName(), Toast.LENGTH_SHORT).show();
 
+                //Saves the necessary information to be used later
                 address = place.getAddress();
 
                 lat = place.getLatLng().latitude;
                 lon = place.getLatLng().longitude;
 
-                System.out.println("ID " + place.getId());
-                System.out.println("NAME " + place.getName());
-                System.out.println("ADDRESS " + place.getAddress());
-                System.out.println("LAT " + place.getLatLng().latitude);
-                System.out.println("LON " + place.getLatLng().longitude);
             }
 
             @Override
             public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
                 Toast.makeText(getApplicationContext(), status.toString(), Toast.LENGTH_SHORT).show();
             }
         });
 
+        //Makes sure register items are not empty before setting data
         registerRest.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -143,6 +137,7 @@ public class RegisterRestaurant extends AppCompatActivity {
 
     }
 
+    //Function to open new page
     private void returnAdminPanel(){
         Intent intent = new Intent(this, AdminPanel.class);
         startActivity(intent);
