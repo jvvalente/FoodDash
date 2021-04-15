@@ -57,6 +57,7 @@ public class ShoppingCart extends AppCompatActivity {
         setContentView(R.layout.cart);
 
 
+        //allows user to go back to home activity
         backButton = (ImageView) findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +68,7 @@ public class ShoppingCart extends AppCompatActivity {
             }
         });
 
+        //list that stores all the food in shopping cart
          listView = (ListView) findViewById(R.id.userList);
          totalPrice = (TextView) findViewById(R.id.totalCartPrice);
          String temp = "Total: $" + total;
@@ -77,6 +79,7 @@ public class ShoppingCart extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //allows user to edit cart and delete an item
                 LayoutInflater inflater =getLayoutInflater();
                 view = inflater.inflate(R.layout.cart,null);
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
@@ -116,7 +119,7 @@ public class ShoppingCart extends AppCompatActivity {
 
 
     public void confirmButton(View view) {
-
+    //allows user to place their order
 
         if(FoodDetails.listItems.size() != 0)
         {

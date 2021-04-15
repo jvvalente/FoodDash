@@ -102,18 +102,21 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        popularFood = new ArrayList<>();
+
+        popularFood = new ArrayList<>(); // make three arrays of food items
 
         recommended = new ArrayList<>();
 
         menus = new ArrayList<>();
 
+        //intent action so the data doesn't need to be retrieved from the database every time on home activity startup
         Intent intent = getIntent();
         String action = "";
 
         if(intent.getAction() != null)
             action = intent.getAction();
 
+        //loads data from restaurant
         loadRestaurantData();
 
         if(action.equals("false"))
@@ -133,20 +136,10 @@ public class Home extends AppCompatActivity {
 
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            //your codes here
 
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        //creates options in top right corner
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
@@ -155,6 +148,7 @@ public class Home extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        //how to select different menu options
         switch (item.getItemId())
         {
             case R.id.editAddress:
@@ -174,6 +168,8 @@ public class Home extends AppCompatActivity {
 
     private void getMenu(List <Menu> menuList){
 
+        //gets entire food menu
+
         menuRecycleView = findViewById(R.id.menu_recycler);
         menuAdapter = new MenuAdapter(this, menuList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -184,6 +180,7 @@ public class Home extends AppCompatActivity {
     }
     private void  getPopularData(List<Popular> popularList){
 
+        //only selects popular foods
         popularRecyclerView = findViewById(R.id.popular_recycler);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         popularAdapter = new PopularAdapter(this, popularList);
@@ -194,6 +191,7 @@ public class Home extends AppCompatActivity {
 
     private void  getRecommendedData(List<Recommended> recommendedList){
 
+        //gets only data that is recommended for the user
         recommendedRecyclerView = findViewById(R.id.recommended_recycler);
         recommendedAdapter = new RecommendedAdapter(this, recommendedList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -205,6 +203,7 @@ public class Home extends AppCompatActivity {
 
     private  void loadUserData(String username)
     {
+        //loads the user data from the database such as address
        FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference users = database.getReference("Users");
 
@@ -242,7 +241,6 @@ public class Home extends AppCompatActivity {
 
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     Restaurant rest1 = postSnapshot.getValue(Restaurant.class);
-                    System.out.println(rest1.getRestaurantLatitude());
                     restLat = rest1.getRestaurantLatitude();
                     restLon = rest1.getRestaurantLongitude();
 
@@ -259,7 +257,10 @@ public class Home extends AppCompatActivity {
 
     private void locationData()
     {
+        //gets the distance between the user location and the restaurant also receives trip time
         Location origin;
+
+        //gets user's location
         if(lat1 == null || long1 == null)
         {
             LatLng latLng = getLocationFromAddress(getBaseContext(),address);
@@ -279,8 +280,10 @@ public class Home extends AppCompatActivity {
         destination.setLatitude(Home.restLat);
         destination.setLongitude(Home.restLon);
 
+        //creates url link for api request
         String url = getDirectionsUrl(origin, destination);
 
+        //parses api
         DownloadTask downloadTask = new DownloadTask();
 
 
@@ -290,6 +293,8 @@ public class Home extends AppCompatActivity {
     }
 
     private void loadData(){
+
+        //loads all the different foods from the database
         FirebaseDatabase database2 = FirebaseDatabase.getInstance();
         DatabaseReference food = database2.getReference("Food");
 
@@ -302,7 +307,6 @@ public class Home extends AppCompatActivity {
 
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     Food item = postSnapshot.getValue(Food.class);
-                    System.out.println(item.getFoodName());
                     popularFood.add(new Popular(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), String.valueOf(item.getDeliveryTime()), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
                     recommended.add(new Recommended(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), String.valueOf(item.getDeliveryTime()), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
                     menus.add(new Menu(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), String.valueOf(item.getDeliveryTime()), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
@@ -318,16 +322,19 @@ public class Home extends AppCompatActivity {
     }
 
     public void shop(View v) {
+        //opens up the shopping cart
         Intent intent = new Intent(this, ShoppingCart.class);
         startActivity(intent);
     }
 
     private void getAddressDialog(User user)
     {
+        //opens up dialog for a user to edit their address
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference users1 = database.getReference("Users");
 
 
+        //builds alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View view = this.getLayoutInflater().inflate(R.layout.address_dialog, null);
@@ -368,6 +375,8 @@ public class Home extends AppCompatActivity {
                                     }
                                 });
                             }
+
+                            //if user doesn't have address or wants a new address adds new address to database and calculates distance and duration
 
                             Location origin = new Location("");
                             origin.setLatitude(lat1);
@@ -411,23 +420,13 @@ public class Home extends AppCompatActivity {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                // TODO: Get info about the selected place.
-                Toast.makeText(getApplicationContext(), place.getName(), Toast.LENGTH_SHORT).show();
-
-
                 address = place.getAddress();
-                System.out.println("ID " + place.getId());
-                System.out.println("NAME " + place.getName());
-                System.out.println("ADDRESS " + place.getAddress());
-                System.out.println("LAT " + place.getLatLng().latitude);
-                System.out.println("LON " + place.getLatLng().longitude);
                 lat1 = place.getLatLng().latitude;
                 long1 = place.getLatLng().longitude;
             }
 
             @Override
             public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
                 Toast.makeText(getApplicationContext(), status.toString(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -436,6 +435,9 @@ public class Home extends AppCompatActivity {
     }
 
     private String getDirectionsUrl(Location origin, Location dest){
+
+        //acquires url link for google api
+
 
         // Origin of route
         String str_origin = "origin="+origin.getLatitude()+","+origin.getLongitude();
@@ -463,6 +465,9 @@ public class Home extends AppCompatActivity {
     }
     /** A method to download json data from url */
     private String downloadUrl(String strUrl) throws IOException {
+
+        //gets request from url
+
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
@@ -558,11 +563,8 @@ public class Home extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 
-
             distance = DirectionsJSONParser.distance;
             duration = DirectionsJSONParser.duration;
-
-            Toast.makeText(getBaseContext(),distance + "  " + duration , Toast.LENGTH_SHORT).show();
 
 
         }
@@ -570,6 +572,8 @@ public class Home extends AppCompatActivity {
 
 
     public LatLng getLocationFromAddress(Context context, String strAddress) {
+
+        //This function converts an address into lat and longitude
 
         Geocoder coder = new Geocoder(context);
         List<Address> address;

@@ -31,6 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        //gets database to be able to be used
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
 
@@ -49,8 +50,10 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //creates new user
                 final User user = new User(usernameText.getText().toString(),passwordText.getText().toString(),"");
 
+                //adjusts database to create the new user
                 users.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -75,17 +78,18 @@ public class SignUpActivity extends AppCompatActivity {
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // if the user doesnt exist wrong info
                 if(snapshot.child(username).exists()){
                     if(!username.isEmpty()){
                         User login = snapshot.child(username).getValue(User.class);
 
+                        //if the user is an admin allows them to manipulate restaurant
                         if(login.getEmail().equals("admin"))
                         {
                             if(login.getPassword().equals("admin"))
                                 openAdminActivity();
                         }
                         else if(login.getPassword().equals(password)){
-                            Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
                             Home.startup = true;
                             openHomeActivity(username);
                         }

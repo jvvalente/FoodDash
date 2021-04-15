@@ -51,6 +51,7 @@ public class FoodDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
 
+        //retrieves info from home activity
         name = intent.getStringExtra("name");
         price = intent.getStringExtra("price");
         rating = intent.getStringExtra("rating");
@@ -66,7 +67,6 @@ public class FoodDetails extends AppCompatActivity {
         ratingBar = findViewById(R.id.ratingBar);
         backButton = findViewById(R.id.imageView2);
 
-        //listView = findViewById(R.id.userList);
 
         try {
             int SDK_INT = android.os.Build.VERSION.SDK_INT;
@@ -104,14 +104,17 @@ public class FoodDetails extends AppCompatActivity {
 
     }
 
-
+    //goes to shopping cart
     public void shoppingCart(View v)
     {
     Intent intent = new Intent(this,ShoppingCart.class);
         startActivity(intent);
     }
+
+    //adds specified food to shopping cart
     public void addToCart(View v)
     {
+        //edits adapter to store new food
         adapter =new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         if(!price.contains("$"))
         listItems.add(name + "\t\t\t\t$" + price);
