@@ -33,6 +33,7 @@ public class AddItem extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.addfood);
 
+            //These onclicklisteners make sure edittext is not empty
             final EditText deliveryCharges = (EditText) findViewById(R.id.deliveryChargeInput);
             deliveryCharges.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -100,12 +101,14 @@ public class AddItem extends AppCompatActivity {
             });
             final Button submit = (Button) findViewById(R.id.submitbutton);
             submit.setOnClickListener(new View.OnClickListener() {
+                //This handles any errors caused by empty edittexts
                 public void onClick(View v) {
                     // your handler code here
                     if(!confirmInput(deliveryCharges,deliveryTime,imageUrl,foodName,foodNote,foodPrice,foodRating,foodType))
                         Toast.makeText(getBaseContext(), "There are Errors or Empty Fields", Toast.LENGTH_LONG).show();
                     else
                     {
+                        //Submits to database
                         Toast.makeText(getBaseContext(), "Submitting to the DataBase", Toast.LENGTH_LONG).show();
                         int deliverytime = Integer.parseInt(deliveryTime.getText().toString());
                         double deliverycharge = Double.parseDouble(deliveryCharges.getText().toString());
@@ -121,6 +124,7 @@ public class AddItem extends AppCompatActivity {
                 }
             });
 
+            //Resets all fields
             final Button reset = (Button) findViewById(R.id.resetbutton);
             reset.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -149,6 +153,7 @@ public class AddItem extends AppCompatActivity {
 
         }
 
+        //Makes sure input is not empty or correct input
         public boolean confirmInput(EditText deliveryCharges,EditText deliveryTime,EditText imageUrl,EditText foodName,EditText foodNote,EditText foodPrice,EditText foodRating,EditText foodType)
         {
             boolean charges,time,url,name,note,price,rating,type;

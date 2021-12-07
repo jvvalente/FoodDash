@@ -11,6 +11,8 @@ public class Restaurant {
     Double restaurantLatitude;
     Double restaurantLongitude;
 
+    public Restaurant() { }
+
     public Restaurant(String restaurantName, String restaurantLogoUrl, String restaurantType, String restaurantOpenTime, String restaurantCloseTime, String restaurantAddress, Double restaurantLatitude, Double restaurantLongitude) {
         this.restaurantName = restaurantName;
         this.restaurantLogoUrl = restaurantLogoUrl;

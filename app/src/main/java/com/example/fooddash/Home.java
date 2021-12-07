@@ -11,9 +11,14 @@ import android.content.DialogInterface;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -33,8 +38,12 @@ import com.example.fooddash.model.Menu;
 import com.example.fooddash.model.Popular;
 import com.example.fooddash.model.Recommended;
 
+import com.example.fooddash.model.Restaurant;
 import com.example.fooddash.model.User;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.TypeFilter;
@@ -47,9 +56,18 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,11 +81,15 @@ public class Home extends AppCompatActivity {
     Button signUpButton;
     EditText search;
     User login;
-    FirebaseDatabase database;
-    DatabaseReference users;
-    String address;
+    static String address = "";
     static Boolean startup;
     static Double lat1,long1;
+    static Double restLat, restLon;
+    static String distance;
+    static String duration;
+    static String currentUser;
+
+
 
     List<Popular> popularFood;
     List <Recommended> recommended;
@@ -79,41 +101,45 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Intent i = getIntent();
-        String currUser = i.getStringExtra("currentUser");
 
-        popularFood = new ArrayList<>();
+
+        popularFood = new ArrayList<>(); // make three arrays of food items
 
         recommended = new ArrayList<>();
 
         menus = new ArrayList<>();
-        if(startup)
-        {
-            loadUserData(currUser);
+
+        //intent action so the data doesn't need to be retrieved from the database every time on home activity startup
+        Intent intent = getIntent();
+        String action = "";
+
+        if(intent.getAction() != null)
+            action = intent.getAction();
+
+        //loads data from restaurant
+        loadRestaurantData();
+
+        if(action.equals("false"))
             startup = false;
 
-        }
+        if(startup)
+            loadUserData(currentUser);
+
+
         loadData();
+
         getPopularData(popularFood);
         getRecommendedData(recommended);
         getMenu(menus);
 
+        startup = false;
+
     }
 
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
-        int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8)
-        {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                    .permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            //your codes here
 
-        }
-    }
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        //creates options in top right corner
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
@@ -122,6 +148,7 @@ public class Home extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
+        //how to select different menu options
         switch (item.getItemId())
         {
             case R.id.editAddress:
@@ -141,6 +168,8 @@ public class Home extends AppCompatActivity {
 
     private void getMenu(List <Menu> menuList){
 
+        //gets entire food menu
+
         menuRecycleView = findViewById(R.id.menu_recycler);
         menuAdapter = new MenuAdapter(this, menuList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -151,6 +180,7 @@ public class Home extends AppCompatActivity {
     }
     private void  getPopularData(List<Popular> popularList){
 
+        //only selects popular foods
         popularRecyclerView = findViewById(R.id.popular_recycler);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         popularAdapter = new PopularAdapter(this, popularList);
@@ -161,6 +191,7 @@ public class Home extends AppCompatActivity {
 
     private void  getRecommendedData(List<Recommended> recommendedList){
 
+        //gets only data that is recommended for the user
         recommendedRecyclerView = findViewById(R.id.recommended_recycler);
         recommendedAdapter = new RecommendedAdapter(this, recommendedList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -169,18 +200,23 @@ public class Home extends AppCompatActivity {
 
     }
 
+
     private  void loadUserData(String username)
     {
-       database = FirebaseDatabase.getInstance();
-        users = database.getReference("Users");
+        //loads the user data from the database such as address
+       FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference users = database.getReference("Users");
 
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 login = snapshot.child(username).getValue(User.class);
+                address = login.getAddress();
                 if (login.getAddress().equals("") || login.getAddress() == null)
                     getAddressDialog(login);
 
+                if(restLat != null && restLon != null)
+                locationData();
 
             }
 
@@ -192,7 +228,73 @@ public class Home extends AppCompatActivity {
         });
 
     }
+
+    private void loadRestaurantData()
+    {
+        //Getting restaurant coordinates
+        FirebaseDatabase database2 = FirebaseDatabase.getInstance();
+        DatabaseReference rest = database2.getReference("Restaurant");
+
+        rest.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot postSnapshot: snapshot.getChildren()) {
+                    Restaurant rest1 = postSnapshot.getValue(Restaurant.class);
+                    restLat = rest1.getRestaurantLatitude();
+                    restLon = rest1.getRestaurantLongitude();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("The read failed: " + error.getMessage());
+            }
+        });
+
+    }
+
+    private void locationData()
+    {
+        //gets the distance between the user location and the restaurant also receives trip time
+        Location origin;
+
+        //gets user's location
+        if(lat1 == null || long1 == null)
+        {
+            LatLng latLng = getLocationFromAddress(getBaseContext(),address);
+            origin = new Location("");
+            origin.setLatitude(latLng.latitude);
+            origin.setLongitude(latLng.longitude);
+        }
+        else
+        {
+            origin = new Location("");
+            origin.setLatitude(lat1);
+            origin.setLongitude(long1);
+        }
+
+        //Add restuarants coordinates here
+        Location destination = new Location("");
+        destination.setLatitude(Home.restLat);
+        destination.setLongitude(Home.restLon);
+
+        //creates url link for api request
+        String url = getDirectionsUrl(origin, destination);
+
+        //parses api
+        DownloadTask downloadTask = new DownloadTask();
+
+
+        // Start downloading json data from Google Directions API
+        downloadTask.execute(url);
+
+    }
+
     private void loadData(){
+
+        //loads all the different foods from the database
         FirebaseDatabase database2 = FirebaseDatabase.getInstance();
         DatabaseReference food = database2.getReference("Food");
 
@@ -205,7 +307,6 @@ public class Home extends AppCompatActivity {
 
                 for (DataSnapshot postSnapshot: snapshot.getChildren()) {
                     Food item = postSnapshot.getValue(Food.class);
-                    System.out.println(item.getFoodName());
                     popularFood.add(new Popular(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), String.valueOf(item.getDeliveryTime()), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
                     recommended.add(new Recommended(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), String.valueOf(item.getDeliveryTime()), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
                     menus.add(new Menu(item.getFoodName(),String.valueOf(item.getFoodPrice()), String.valueOf(item.getFoodRating()), String.valueOf(item.getDeliveryTime()), String.valueOf(item.getDeliveryCharges()), item.getFoodNote(), item.getFoodImageUrl()));
@@ -221,45 +322,77 @@ public class Home extends AppCompatActivity {
     }
 
     public void shop(View v) {
+        //opens up the shopping cart
         Intent intent = new Intent(this, ShoppingCart.class);
         startActivity(intent);
     }
 
     private void getAddressDialog(User user)
     {
-        users = database.getReference("Users");
-        /*LayoutInflater inflater =getLayoutInflater();
-        View view = inflater.inflate(R.layout.activity_home,null);
-        EditText addy = new EditText(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-        builder.setView(addy);
-        if(user.getAddress().equals("") || user.getAddress() == null)
-            builder.setMessage("Please Add an Address");
-        else
-            builder.setMessage("Type in a new address")
-                .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    user.setAddress(addy.getText().toString());
-                    users.child(user.getEmail()).setValue(user);
-
-                    }
-                });
-
-        final AlertDialog dialog = builder.create();*/
+        //opens up dialog for a user to edit their address
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference users1 = database.getReference("Users");
 
 
+        //builds alert dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         View view = this.getLayoutInflater().inflate(R.layout.address_dialog, null);
         builder.setView(view);
-        if(user.getAddress().equals("") || user.getAddress() == null)
+        if(address.equals(""))
             builder.setMessage("Please Add an Address");
         else
-            builder.setMessage("Type in a new address")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        {
+            builder.setMessage("Type in a new address");
+
+        }
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            user.setAddress(address);
-                            users.child(user.getEmail()).setValue(user);
+                            if(user != null)
+                            {
+                                user.setAddress(address);
+                                users1.child(user.getEmail()).setValue(user);
+
+                            }
+                            else
+                            {
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference users = database.getReference("Users");
+
+                                users.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        login = snapshot.child(currentUser).getValue(User.class);
+                                        login.setAddress(address);
+                                        users1.child(login.getEmail()).setValue(login);
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+                                        System.out.println("The read failed: " + error.getMessage());
+
+                                    }
+                                });
+                            }
+
+                            //if user doesn't have address or wants a new address adds new address to database and calculates distance and duration
+
+                            Location origin = new Location("");
+                            origin.setLatitude(lat1);
+                            origin.setLongitude(long1);
+
+                            //Add restuarants coordinates here
+                            Location destination = new Location("");
+                            destination.setLatitude(restLat);
+                            destination.setLongitude(restLon);
+
+                            String url = getDirectionsUrl(origin, destination);
+
+                            DownloadTask downloadTask = new DownloadTask();
+
+                            // Start downloading json data from Google Directions API
+                            downloadTask.execute(url);
 
                         }
                     });
@@ -274,8 +407,10 @@ public class Home extends AppCompatActivity {
             Places.initialize(getApplicationContext(), apiKey);
         }
 
+
         // Create a new Places client instance.
         placesClient = Places.createClient(this);
+
 
         // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
@@ -285,33 +420,13 @@ public class Home extends AppCompatActivity {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
-                // TODO: Get info about the selected place.
-                Toast.makeText(getApplicationContext(), place.getName(), Toast.LENGTH_SHORT).show();
-
-
                 address = place.getAddress();
-                System.out.println("ID " + place.getId());
-                System.out.println("NAME " + place.getName());
-                System.out.println("ADDRESS " + place.getAddress());
-                System.out.println("LAT " + place.getLatLng().latitude);
-                System.out.println("LON " + place.getLatLng().longitude);
                 lat1 = place.getLatLng().latitude;
                 long1 = place.getLatLng().longitude;
-//                Location location1 = new Location("");
-//                location1.setLatitude(lat1);
-//                location1.setLongitude(long1);
-//
-//                Location location2 = new Location("");
-//                location2.setLatitude(30.4466781);
-//                location2.setLongitude(-84.3077076);
-
-                double distanceInMiles = calculateDistance(long1,lat1,-84.3077076,30.4466781);
-
             }
 
             @Override
             public void onError(@NonNull Status status) {
-                // TODO: Handle the error.
                 Toast.makeText(getApplicationContext(), status.toString(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -319,36 +434,168 @@ public class Home extends AppCompatActivity {
 
     }
 
-    public static double calculateDistance(double lon1,double lat1,double lon2,double lat2)
-    {
-        double longDiff = lon1 - lon2;
+    private String getDirectionsUrl(Location origin, Location dest){
 
-        double distance = Math.sin(deg2rad(lat1))
-                * Math.sin(deg2rad(lat2))
-                + Math.cos(deg2rad(lat1))
-                * Math.cos(deg2rad(lat2))
-                * Math.cos(deg2rad(longDiff));
-        distance = Math.acos(distance);
-
-        distance = rad2deg(distance);
-
-        distance = distance * 60 * 1.1515;
+        //acquires url link for google api
 
 
-        return distance;
+        // Origin of route
+        String str_origin = "origin="+origin.getLatitude()+","+origin.getLongitude();
 
+        // Destination of route
+        String str_dest = "destination="+dest.getLatitude()+","+dest.getLongitude();
 
+        // Sensor enabled
+        String sensor = "sensor=false";
 
+        String mode = "mode=driving";
+
+        String key = "key="+getResources().getString(R.string.api_key);
+
+        // Building the parameters to the web service
+        String parameters = str_origin+"&"+str_dest+"&"+sensor + "&" + mode + "&" + key;
+
+        // Output format
+        String output = "json";
+
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+
+        return url;
+    }
+    /** A method to download json data from url */
+    private String downloadUrl(String strUrl) throws IOException {
+
+        //gets request from url
+
+        String data = "";
+        InputStream iStream = null;
+        HttpURLConnection urlConnection = null;
+        try{
+            URL url = new URL(strUrl);
+
+            // Creating an http connection to communicate with url
+            urlConnection = (HttpURLConnection) url.openConnection();
+
+            // Connecting to url
+            urlConnection.connect();
+
+            // Reading data from url
+            iStream = urlConnection.getInputStream();
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
+
+            StringBuffer sb  = new StringBuffer();
+
+            String line = "";
+            while( ( line = br.readLine())  != null){
+                sb.append(line);
+            }
+
+            data = sb.toString();
+
+            br.close();
+
+        }catch(Exception e){
+            Log.d("Exception while ", e.toString());
+        }finally{
+            iStream.close();
+            urlConnection.disconnect();
+        }
+        return data;
     }
 
-    private static double rad2deg(double dist)
-    {
-        return (dist*180.0 / Math.PI);
+
+    // Fetches data from url passed
+    private class DownloadTask extends AsyncTask<String, Void, String> {
+
+        // Downloading data in non-ui thread
+        @Override
+        protected String doInBackground(String... url) {
+
+            // For storing data from web service
+            String data = "";
+
+            try{
+                // Fetching the data from web service
+                data = downloadUrl(url[0]);
+            }catch(Exception e){
+                Log.d("Background Task",e.toString());
+            }
+            return data;
+        }
+
+        // Executes in UI thread, after the execution of
+        // doInBackground()
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParserTask parserTask = new ParserTask();
+
+            // Invokes the thread for parsing the JSON data
+            parserTask.execute(result);
+        }
     }
 
-    private static double deg2rad(double lat1)
-    {
-        return (lat1*Math.PI/180.0);
+    /** A class to parse the Google Places in JSON format */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> > {
+
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+
+            try{
+                jObject = new JSONObject(jsonData[0]);
+                DirectionsJSONParser parser = new DirectionsJSONParser();
+
+                // Starts parsing data
+                parser.parse(jObject);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        // Executes in UI thread, after the parsing process
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+
+            distance = DirectionsJSONParser.distance;
+            duration = DirectionsJSONParser.duration;
+
+
+        }
+    }
+
+
+    public LatLng getLocationFromAddress(Context context, String strAddress) {
+
+        //This function converts an address into lat and longitude
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 
 }

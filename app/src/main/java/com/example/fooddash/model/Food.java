@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
+//Food Class that contains necessary components of different kinds of foods
 public class Food {
 
     private String foodName;

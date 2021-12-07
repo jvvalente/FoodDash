@@ -21,57 +21,67 @@
 
 
             <ImageView
-                android:id="@+id/imageView10"
+                android:id="@+id/restaurantProfilePic"
                 android:layout_width="126dp"
                 android:layout_height="128dp"
-                tools:layout_editor_absoluteX="147dp"
-                tools:layout_editor_absoluteY="16dp"
-                tools:srcCompat="@tools:sample/avatars" />
+                android:layout_marginStart="147dp"
+                android:layout_marginLeft="147dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="145dp"
+                android:layout_marginRight="145dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_cart"
+                android:contentDescription="TODO" />
 
             <TextView
                 android:id="@+id/textViewRestName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="180dp"
-                android:layout_marginLeft="180dp"
+                android:layout_width="394dp"
+                android:layout_height="21dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="179dp"
-                android:layout_marginRight="179dp"
-                android:text="TextView"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="Register"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+                app:layout_constraintTop_toBottomOf="@+id/restaurantProfilePic" />
 
             <TextView
                 android:id="@+id/textViewRestAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="180dp"
-                android:layout_marginLeft="180dp"
+                android:layout_width="390dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="180dp"
-                android:layout_marginRight="180dp"
-                android:text="TextView"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center"
+                android:text="Register"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="0.25"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewRestName" />
 
             <TextView
                 android:id="@+id/textViewRestHours"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="180dp"
-                android:layout_marginLeft="180dp"
+                android:layout_width="398dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
                 android:layout_marginTop="12dp"
-                android:layout_marginEnd="180dp"
-                android:layout_marginRight="180dp"
-                android:text="TextView"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Register"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewRestAddress" />
+                app:layout_constraintTop_toBottomOf="@+id/textViewRestAddress"
+                android:gravity="center"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
@@ -98,6 +108,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/add_item_button" />
+
+        <Button
+            android:id="@+id/returnButton"
+            android:layout_width="209dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="RETURN" />
     </LinearLayout>
 
 

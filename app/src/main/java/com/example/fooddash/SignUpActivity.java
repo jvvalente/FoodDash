@@ -31,6 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
+        //gets database to be able to be used
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
 
@@ -49,11 +50,14 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //creates new user
                 final User user = new User(usernameText.getText().toString(),passwordText.getText().toString(),"");
 
+                //adjusts database to create the new user
                 users.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //These will make sure user does not exist before creating it
                         if(snapshot.child(user.getEmail()).exists())
                             Toast.makeText(SignUpActivity.this, "Username already signed up!", Toast.LENGTH_SHORT).show();
                         else{
@@ -75,17 +79,18 @@ public class SignUpActivity extends AppCompatActivity {
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // if the user doesnt exist wrong info
                 if(snapshot.child(username).exists()){
                     if(!username.isEmpty()){
                         User login = snapshot.child(username).getValue(User.class);
 
+                        //if the user is an admin allows them to manipulate restaurant
                         if(login.getEmail().equals("admin"))
                         {
                             if(login.getPassword().equals("admin"))
                                 openAdminActivity();
-                        }
+                        }//Checks if user exists
                         else if(login.getPassword().equals(password)){
-                            Toast.makeText(SignUpActivity.this, "Success!", Toast.LENGTH_SHORT).show();
                             Home.startup = true;
                             openHomeActivity(username);
                         }
@@ -105,9 +110,10 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    //Functions to open new pages
     private void openHomeActivity(String username){
         Intent intent = new Intent(this, Home.class);
-        intent.putExtra("currentUser",username);
+        Home.currentUser = username;
         startActivity(intent);
     }
     private void openAdminActivity(){
